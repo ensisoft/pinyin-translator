@@ -1,0 +1,30 @@
+
+import os ;
+import path ;
+import qt ;
+
+path-constant QT_PATH : "../qt-4.8.2" ;
+
+using qt : $(QT_PATH) ;
+
+project pime :
+   requirements
+   <include>$(QT_PATH)/include/QtCore
+   <include>$(QT_PATH)/include
+   <threading>multi
+   <toolset>gcc:<cflags>-std=c++11
+   <toolset>clang:<clfags>-std=c++11
+;
+
+exe pime :
+   main.cpp
+   mainwindow.h
+   mainwindow.cpp
+   mainwindow.ui
+   dictionary.cpp
+   resource.qrc
+   dlgword.ui
+   dlgword.h
+   /qt//QtCore
+   /qt//QtGui
+;
