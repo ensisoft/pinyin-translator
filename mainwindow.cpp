@@ -34,6 +34,7 @@
 
 #include "mainwindow.h"
 #include "dlgword.h"
+#include "dlgdictionary.h"
 
 #define NOTE(x) \
     ui_.statusbar->showMessage(x, 5000)
@@ -85,35 +86,6 @@ MainWindow::~MainWindow()
     dic_.save(file);
 }
 
-void MainWindow::on_btnAddWord_clicked()
-{
-    DlgWord dlg(this, key_);
-
-    if (dlg.exec() == QDialog::Accepted)
-    {
-        dictionary::word word;
-        word.chinese = dlg.chinese();
-        word.pinyin  = dlg.pinyin();
-        word.description = dlg.desc();
-
-        auto key = word.pinyin.toAscii();
-
-        qDebug() << "New word key: " << key;
-
-        dic_.store(key, word);
-
-        NOTE(QString("Added %1").arg(word.chinese));
-
-        updateDictionary(key_);
-    }
-}
-
-void MainWindow::on_btnEditWord_clicked()
-{
-
-}
-
-
 void MainWindow::on_actionExit_triggered()
 {
     close();
@@ -121,8 +93,33 @@ void MainWindow::on_actionExit_triggered()
 
 void MainWindow::on_actionAddWord_triggered()
 {
-    on_btnAddWord_clicked();
+    DlgWord dlg(this, key_);
+
+    if (dlg.exec() == QDialog::Accepted)
+    {
+        dictionary::word word;
+        word.key         = dlg.key();
+        word.chinese     = dlg.chinese();
+        word.pinyin      = dlg.pinyin();
+        word.description = dlg.desc();
+        word.tags        = 0;
+
+        qDebug() << "New word key: " << word.key;
+
+        dic_.store(word);
+
+        NOTE(QString("Added %1").arg(word.chinese));
+
+        updateDictionary(key_);
+    }
 }
+
+void MainWindow::on_actionDictionary_triggered()
+{
+    DlgDictionary dlg(this, dic_);
+    dlg.exec();
+}
+
 
 void MainWindow::on_editPinyin_textEdited(const QString& text)
 {
@@ -207,9 +204,10 @@ void MainWindow::updateDictionary(const QString& key)
         const auto& word = words_[i];
 
         QListWidgetItem* item = new QListWidgetItem();
-        item->setText(QString("%1. %2\t%3")
+        item->setText(QString("%1. %2\t%3\t%4")
             .arg(i + 1)
             .arg(word.chinese)
+            .arg(word.pinyin)
             .arg(word.description));
         ui_.listWords->addItem(item);
     }

@@ -3,6 +3,8 @@
   <qresource>
     <file>icons/ico_exit.png</file>
     <file>icons/ico_word_add.png</file>
+    <file>icons/ico_word_del.png</file>    
     <file>icons/ico_word_edit.png</file>    
+    <file>icons/ico_dictionary.png</file>
   </qresource>
 </RCC>

@@ -25,6 +25,9 @@ exe pime :
    resource.qrc
    dlgword.ui
    dlgword.h
+   dlgdictionary.ui
+   dlgdictionary.h
+   dlgdictionary.cpp
    /qt//QtCore
    /qt//QtGui
 ;

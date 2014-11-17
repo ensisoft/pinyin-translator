@@ -11,7 +11,7 @@
             "-I${home}/coding/qt-4.8.2/include/QtCore",
 
             // for MOC and UIC generated headers
-            "-I${home}/coding/pime/bin/gcc-4.9.2/debug/threading-multi/"
+            "-I${home}/coding/pinyin-translator/bin/gcc-4.9.2/debug/threading-multi/"
         ]
     }
 }

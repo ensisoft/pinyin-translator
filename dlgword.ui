@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>422</width>
-    <height>173</height>
+    <width>453</width>
+    <height>203</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -22,17 +22,37 @@
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
        <layout class="QGridLayout" name="gridLayout">
+        <item row="2" column="1">
+         <widget class="QLineEdit" name="editChinese"/>
+        </item>
         <item row="0" column="0">
+         <widget class="QLabel" name="label_4">
+          <property name="text">
+           <string>Key</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QLineEdit" name="editDescription"/>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLineEdit" name="editKey"/>
+        </item>
+        <item row="1" column="0">
          <widget class="QLabel" name="label">
           <property name="text">
            <string>Pinyin</string>
           </property>
          </widget>
         </item>
-        <item row="0" column="1">
-         <widget class="QLineEdit" name="editPinyin"/>
+        <item row="3" column="0">
+         <widget class="QLabel" name="label_3">
+          <property name="text">
+           <string>Description</string>
+          </property>
+         </widget>
         </item>
-        <item row="1" column="0">
+        <item row="2" column="0">
          <widget class="QLabel" name="label_2">
           <property name="text">
            <string>Chinese</string>
@@ -40,17 +60,7 @@
          </widget>
         </item>
         <item row="1" column="1">
-         <widget class="QLineEdit" name="editChinese"/>
-        </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="label_3">
-          <property name="text">
-           <string>Description</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
-         <widget class="QLineEdit" name="editDescription"/>
+         <widget class="QLineEdit" name="editPinyin"/>
         </item>
        </layout>
       </item>
@@ -90,6 +100,14 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>editKey</tabstop>
+  <tabstop>editPinyin</tabstop>
+  <tabstop>editChinese</tabstop>
+  <tabstop>editDescription</tabstop>
+  <tabstop>btnAccept</tabstop>
+  <tabstop>btnCancel</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

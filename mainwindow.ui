@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Pinyin Translator</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -60,50 +60,7 @@
          </property>
         </widget>
        </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout">
-         <item>
-          <spacer name="horizontalSpacer">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item>
-          <widget class="QPushButton" name="btnAddWord">
-           <property name="text">
-            <string>Add ...</string>
-           </property>
-           <property name="icon">
-            <iconset resource="resource.qrc">
-             <normaloff>:/icons/ico_word_add.png</normaloff>:/icons/ico_word_add.png</iconset>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="btnEditWord">
-           <property name="text">
-            <string>Edit ...</string>
-           </property>
-           <property name="icon">
-            <iconset resource="resource.qrc">
-             <normaloff>:/icons/ico_word_edit.png</normaloff>:/icons/ico_word_edit.png</iconset>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
       </layout>
-      <zorder>listWords</zorder>
-      <zorder>btnAddWord</zorder>
-      <zorder>btnEditWord</zorder>
-      <zorder>groupBox_3</zorder>
      </widget>
     </item>
    </layout>
@@ -120,11 +77,13 @@
     <enum>TopToolBarArea</enum>
    </attribute>
    <attribute name="toolBarBreak">
-    <bool>true</bool>
+    <bool>false</bool>
    </attribute>
    <addaction name="actionExit"/>
    <addaction name="separator"/>
    <addaction name="actionAddWord"/>
+   <addaction name="separator"/>
+   <addaction name="actionDictionary"/>
   </widget>
   <action name="actionExit">
    <property name="icon">
@@ -144,13 +103,25 @@
      <normaloff>:/icons/ico_word_add.png</normaloff>:/icons/ico_word_add.png</iconset>
    </property>
    <property name="text">
-    <string>Add Word</string>
+    <string>New Word</string>
    </property>
    <property name="toolTip">
     <string>Add new word to the dictionary</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="actionDictionary">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/icons/ico_dictionary.png</normaloff>:/icons/ico_dictionary.png</iconset>
+   </property>
+   <property name="text">
+    <string>Dictionary</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+D</string>
    </property>
   </action>
  </widget>

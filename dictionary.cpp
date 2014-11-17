@@ -22,6 +22,7 @@
 
 #include "config.h"
 #include "warnpush.h"
+#  include <QtDebug>
 #  include <QFile>
 #  include <QTextStream>
 #  include <QStringList>
@@ -33,7 +34,7 @@
 namespace pime
 {
 
-dictionary::dictionary(const QString& file)
+dictionary::dictionary(const QString& file) : wordguid_(1)
 {
     load(file);
 }
@@ -59,9 +60,12 @@ void dictionary::load(const QString& file)
         const auto& key  = toks[0];
 
         dictionary::word word;
+        word.key         = key;
         word.chinese     = toks[1];
         word.pinyin      = toks[2];
         word.description = toks[3];
+        word.guid        = wordguid_++;
+        word.tags        = 0;
         words_.insert(std::make_pair(key, word));
     }
 }
@@ -85,7 +89,7 @@ void dictionary::save(const QString& file)
     }
 }
 
-std::vector<dictionary::word> dictionary::lookup(const QString& key)
+std::vector<dictionary::word> dictionary::lookup(const QString& key) const
 {
     auto lower = words_.lower_bound(key);
     auto upper = words_.upper_bound(key);
@@ -97,9 +101,60 @@ std::vector<dictionary::word> dictionary::lookup(const QString& key)
     return ret;
 }
 
-void dictionary::store(const QString& key, const word& w)
+std::vector<dictionary::word> dictionary::flatten() const
 {
-    words_.insert(std::make_pair(key, w));
+    std::vector<word> ret;
+
+    for (auto pair : words_)
+        ret.push_back(pair.second);
+
+    return ret;
+}
+
+bool dictionary::store(dictionary::word& word)
+{
+    Q_ASSERT(!word.key.isEmpty());
+    Q_ASSERT(!word.chinese.isEmpty());
+    Q_ASSERT(!word.pinyin.isEmpty());
+
+    auto lower = words_.lower_bound(word.key);
+    auto upper = words_.upper_bound(word.key);
+    for (; lower != upper; ++lower)
+    {
+        const auto& w = lower->second;
+        if (w.guid != word.guid)
+            continue;
+
+        lower->second.chinese = word.chinese;
+        lower->second.pinyin  = word.pinyin;
+        lower->second.description = word.description;
+        qDebug() << "Updated word: " << word.key << "Pinyin: " << word.pinyin << "Ch: " << word.chinese;
+        return true;
+    }
+
+    word.guid = wordguid_++;
+    words_.insert(std::make_pair(word.key, word));
+    qDebug() << "Stored new word: " << word.key << "Pinyin: " << word.pinyin << " Ch: " << word.chinese;
+    return false;
+}
+
+bool dictionary::erase(const dictionary::word& word)
+{
+    Q_ASSERT(!word.key.isEmpty());
+    Q_ASSERT(word.guid);
+
+    auto lower = words_.lower_bound(word.key);
+    auto upper = words_.upper_bound(word.key);
+    for (; lower != upper; ++lower)
+    {
+        const auto& w = lower->second;
+        if (w.guid != word.guid)
+            continue;
+
+        words_.erase(lower);
+        return true;
+    }
+    return false;
 }
 
 } // pime

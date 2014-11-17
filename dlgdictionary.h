@@ -25,48 +25,39 @@
 #include "config.h"
 
 #include "warnpush.h"
-#  include <QtGui/QMainWindow>
-#  include <QObject>
-#  include "ui_mainwindow.h"
+#  include <QtGui/QDialog>
+#  include <QAbstractTableModel>
+#  include "ui_dlgdictionary.h"
 #include "warnpop.h"
-#include <list>
-#include "dictionary.h"
+#include <memory>
 
 namespace pime
 {
-    class MainWindow : public QMainWindow
+    class dictionary;
+
+    class DlgDictionary : public QDialog
     {
         Q_OBJECT
 
     public:
-        MainWindow();
-       ~MainWindow();
+        DlgDictionary(QWidget* parent, dictionary& dic);
+       ~DlgDictionary();
+
+    private:
+        void updateTable(const QString& search);
 
     private slots:
-        void on_actionExit_triggered();
-        void on_actionAddWord_triggered();
-        void on_actionDictionary_triggered();
-        void on_editPinyin_textEdited(const QString& text);
-    private:
-        bool eventFilter(QObject* reciver, QEvent* event) override;
-        void translate(int index);
-        void updateDictionary(const QString& key);
-        void updateTranslation();
+        void on_btnAdd_clicked();
+        void on_btnDel_clicked();
+        void on_btnEdit_clicked();
+        void on_btnClose_clicked();
+        void on_tableView_doubleClicked(const QModelIndex&);
 
     private:
-        struct token {
-            QString key;
-            QString chinese;
-        };
-        std::list<token> line_;
-        std::vector<dictionary::word> words_;
-        QString key_;
+        Ui::Dictionary ui_;
 
     private:
-        Ui::MainWindow ui_;
-
-    private:
-        dictionary dic_; 
+        class TableModel;
+        std::unique_ptr<TableModel> model_;
     };
-
 } // pime

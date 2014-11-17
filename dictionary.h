@@ -36,26 +36,44 @@ namespace pime
     {
     public:
         struct word {
+            QString key;
             QString chinese;
             QString pinyin;
             QString description;
+            quint32 tags;
+            quint32 guid;
         };
 
         dictionary(const QString& file);
         dictionary();
        ~dictionary();
 
+        // load a dictionary from a file.
         void load(const QString& file);
+
+        // save the in memory contents of the dictionary to a file
         void save(const QString& file);
 
-        std::vector<word> lookup(const QString& key);
+        // lookup a list of works with the given key in the dictionary.
+        std::vector<word> lookup(const QString& key) const;
 
-        void store(const QString& key, const word& w);
+        // flatten the whole dictionary into a list.
+        std::vector<word> flatten() const;
 
+        // store a word in the dictionary.
+        // if the word indentified by the given key and guid already exists
+        // then it's definition is updated. otherwise it's stored as a new word.
+        // returns true if word was modified, false if inserted.
+        bool store(dictionary::word& word);
+
+        bool erase(const dictionary::word& word);
+
+        // return the number of words in the dictionary.
         std::size_t wordCount() const 
         { return words_.size(); }
     private:
         QString filename_;
+        quint32 wordguid_;
 
     private:
         std::multimap<QString, word> words_;

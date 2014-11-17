@@ -39,12 +39,31 @@ namespace pime
         DlgWord(QWidget* parent, const QString& key) : QDialog(parent)
         {
             ui_.setupUi(this);
-            ui_.editPinyin->setText(key);
+            ui_.editKey->setText(key);
             if (!key.isEmpty())
-                ui_.editChinese->setFocus();
+                ui_.editPinyin->setFocus();
         }
+
+        DlgWord(QWidget* parent, const QString& key, 
+            const QString& pinyin,
+            const QString& chinese,
+            const QString& desc) : QDialog(parent)
+        {
+            ui_.setupUi(this);
+            ui_.editKey->setEnabled(false);            
+            ui_.editKey->setText(key);
+            ui_.editPinyin->setText(pinyin);
+            ui_.editChinese->setText(chinese);
+            ui_.editDescription->setText(desc);
+        }
+
        ~DlgWord()
         {}
+
+        QString key() const 
+        {
+            return ui_.editKey->text();
+        }
 
         QString chinese() const 
         {
@@ -64,6 +83,12 @@ namespace pime
     private slots:
         void on_btnAccept_clicked()
         {
+            const auto& key = ui_.editKey->text();
+            if (key.isEmpty())
+            {
+                ui_.editKey->setFocus();
+                return;
+            }
             const auto& pinyin = ui_.editPinyin->text();
             if (pinyin.isEmpty())
             {
@@ -79,9 +104,9 @@ namespace pime
             accept();
         }
 
-        void btnCancel_clicked()
+        void on_btnCancel_clicked()
         {
-            close();
+            reject();
         }
 
     private:
