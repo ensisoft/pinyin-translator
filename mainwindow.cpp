@@ -23,11 +23,12 @@
 #include "config.h"
 
 #include "warnpush.h"
+#  include <QtGui/QKeyEvent>
+#  include <QtGui/QClipboard>
 #  include <QtDebug>
 #  include <QDir>
 #  include <QFileInfo>
 #  include <QSettings>
-#  include <QtGui/QKeyEvent>
 #include "warnpop.h"
 #include <stdexcept>
 #include <algorithm>
@@ -69,7 +70,7 @@ MainWindow::MainWindow()
     move(xpos, ypos);
     resize(wwidth, wheight);
 
-    ui_.editPinyin->installEventFilter(this);
+    ui_.editInput->installEventFilter(this);
 }
 
 MainWindow::~MainWindow()
@@ -91,27 +92,35 @@ void MainWindow::on_actionExit_triggered()
     close();
 }
 
-void MainWindow::on_actionAddWord_triggered()
+void MainWindow::on_actionNewWord_triggered()
 {
-    DlgWord dlg(this, key_);
+    const auto key = ui_.editInput->text();
 
-    if (dlg.exec() == QDialog::Accepted)
-    {
-        dictionary::word word;
-        word.key         = dlg.key();
-        word.chinese     = dlg.chinese();
-        word.pinyin      = dlg.pinyin();
-        word.description = dlg.desc();
-        word.tags        = 0;
+    DlgWord dlg(this, key);
+    if (dlg.exec() == QDialog::Rejected)
+        return;
 
-        qDebug() << "New word key: " << word.key;
+    dictionary::word word;
+    word.key         = dlg.key();
+    word.chinese     = dlg.chinese();
+    word.pinyin      = dlg.pinyin();
+    word.description = dlg.desc();
+    word.tags        = 0;
+    dic_.store(word);
 
-        dic_.store(word);
+    NOTE(QString("Added %1").arg(word.chinese));
 
-        NOTE(QString("Added %1").arg(word.chinese));
+    updateDictionary(key);
+}
 
-        updateDictionary(key_);
-    }
+void MainWindow::on_actionNewText_triggered()
+{
+    ui_.editInput->clear();
+    ui_.editInput->setFocus();
+
+    line_.clear();
+    updateTranslation();    
+    updateDictionary("");
 }
 
 void MainWindow::on_actionDictionary_triggered()
@@ -121,58 +130,56 @@ void MainWindow::on_actionDictionary_triggered()
 }
 
 
-void MainWindow::on_editPinyin_textEdited(const QString& text)
+void MainWindow::on_editInput_textEdited(const QString& text)
 {
-    if (text.isEmpty())
-    {
-        if (!line_.empty())
-        {
-            const auto& back = line_.back();
-            key_ = back.key;
-        }
-    }
-    else
-    {
-        key_ = text;
-    }
-    updateDictionary(key_);
-    updateTranslation();
+    updateDictionary(text);
 }
 
 bool MainWindow::eventFilter(QObject* receiver, QEvent* event)
 {
-    if (receiver != ui_.editPinyin)
+    if (receiver != ui_.editInput)
         return QMainWindow::eventFilter(receiver, event);
     if (event->type() != QEvent::KeyPress)
         return QMainWindow::eventFilter(receiver, event);        
 
-    const auto* key = static_cast<const QKeyEvent*>(event);
+    const auto* keypress = static_cast<const QKeyEvent*>(event);
+    const auto input = ui_.editInput->text();
 
-    int translation_index = 0;
-    switch (key->key())
+    int wordindex = 0;
+    bool copy_to_clip = false;
+    switch (keypress->key())
     {
-        case Qt::Key_1: translation_index = 1; break;
-        case Qt::Key_2: translation_index = 2; break;
-        case Qt::Key_3: translation_index = 3; break;
-        case Qt::Key_4: translation_index = 4; break;
-        case Qt::Key_5: translation_index = 5; break;
-        case Qt::Key_6: translation_index = 6; break;
-        case Qt::Key_7: translation_index = 7; break;
-        case Qt::Key_8: translation_index = 8; break;
-        case Qt::Key_9: translation_index = 9; break;
+        case Qt::Key_1: wordindex = 1; break;
+        case Qt::Key_2: wordindex = 2; break;
+        case Qt::Key_3: wordindex = 3; break;
+        case Qt::Key_4: wordindex = 4; break;
+        case Qt::Key_5: wordindex = 5; break;
+        case Qt::Key_6: wordindex = 6; break;
+        case Qt::Key_7: wordindex = 7; break;
+        case Qt::Key_8: wordindex = 8; break;
+        case Qt::Key_9: wordindex = 9; break;
+        case Qt::Key_Space: wordindex = 1; break;
+        case Qt::Key_Enter: wordindex = 1; copy_to_clip = true; break;
     }
 
-    if (!translation_index)
+    if (!wordindex)
         return QMainWindow::eventFilter(receiver, event);
 
-    qDebug() << "Keyboard translation_index: " << translation_index;
-    qDebug() << "Pinyin word: " << key_;
-    translate(translation_index-1);                
-    key_.clear();
-    ui_.editPinyin->clear();
+    qDebug() << "List index: " << wordindex;
+    qDebug() << "Input word: " << input;
 
-    updateDictionary(key_);
+    translate(wordindex-1);                
     updateTranslation();
+    updateDictionary("");
+
+    ui_.editInput->clear();
+
+    if (copy_to_clip)
+    {
+        QString chinese = ui_.editChinese->text();
+        QClipboard* clip = QApplication::clipboard();
+        clip->setText(chinese);
+    }
     return true;
 }
 
@@ -183,12 +190,9 @@ void MainWindow::translate(int index)
 
     const auto& word = words_[index];
 
-    QString pinyin  = key_;
-    QString chinese = word.chinese;
-
     token tok;
-    tok.key = pinyin;
-    tok.chinese = chinese;
+    tok.pinyin  = word.pinyin;
+    tok.chinese = word.chinese;
     line_.push_back(tok);
 }
 
@@ -215,12 +219,16 @@ void MainWindow::updateDictionary(const QString& key)
 
 void MainWindow::updateTranslation()
 {
-    // concatenate chinese
-    QString text;
+    QString chinese;
+    QString pinyin;
     for (const auto& tok : line_)
-        text += tok.chinese;
+    {
+        chinese += tok.chinese;
+        pinyin  += QString("%1 ").arg(tok.pinyin);
+    }
 
-    ui_.editChinese->setText(text);
+    ui_.editPinyin->setText(pinyin);
+    ui_.editChinese->setText(chinese);
 }
 
 } // pime

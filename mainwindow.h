@@ -44,9 +44,10 @@ namespace pime
 
     private slots:
         void on_actionExit_triggered();
-        void on_actionAddWord_triggered();
+        void on_actionNewWord_triggered();
+        void on_actionNewText_triggered();
         void on_actionDictionary_triggered();
-        void on_editPinyin_textEdited(const QString& text);
+        void on_editInput_textEdited(const QString& text);
     private:
         bool eventFilter(QObject* reciver, QEvent* event) override;
         void translate(int index);
@@ -55,12 +56,11 @@ namespace pime
 
     private:
         struct token {
-            QString key;
+            QString pinyin;
             QString chinese;
         };
         std::list<token> line_;
         std::vector<dictionary::word> words_;
-        QString key_;
 
     private:
         Ui::MainWindow ui_;

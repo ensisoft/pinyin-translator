@@ -6,5 +6,6 @@
     <file>icons/ico_word_del.png</file>    
     <file>icons/ico_word_edit.png</file>    
     <file>icons/ico_dictionary.png</file>
+    <file>icons/ico_new_text.png</file>
   </qresource>
 </RCC>

@@ -6,22 +6,45 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>479</width>
-    <height>478</height>
+    <width>474</width>
+    <height>576</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Pinyin Translator</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout_2">
+   <layout class="QVBoxLayout" name="verticalLayout">
     <item>
      <widget class="QGroupBox" name="groupBox_2">
       <property name="title">
-       <string>Pinyin</string>
+       <string>Text</string>
       </property>
-      <layout class="QVBoxLayout" name="verticalLayout_4">
-       <item>
+      <layout class="QGridLayout" name="gridLayout">
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_3">
+         <property name="text">
+          <string>Input</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLineEdit" name="editInput">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>Pinyin</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
         <widget class="QLineEdit" name="editPinyin">
          <property name="font">
           <font>
@@ -30,7 +53,14 @@
          </property>
         </widget>
        </item>
-       <item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>Chinese</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
         <widget class="QLineEdit" name="editChinese">
          <property name="enabled">
           <bool>true</bool>
@@ -81,9 +111,46 @@
    </attribute>
    <addaction name="actionExit"/>
    <addaction name="separator"/>
-   <addaction name="actionAddWord"/>
+   <addaction name="actionNewText"/>
+   <addaction name="separator"/>
+   <addaction name="actionNewWord"/>
    <addaction name="separator"/>
    <addaction name="actionDictionary"/>
+   <addaction name="separator"/>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>474</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionExit"/>
+    <addaction name="separator"/>
+    <addaction name="actionNewText"/>
+   </widget>
+   <widget class="QMenu" name="menuAbout">
+    <property name="title">
+     <string>About</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="menuDictionary">
+    <property name="title">
+     <string>Dictionary</string>
+    </property>
+    <addaction name="actionNewWord"/>
+    <addaction name="separator"/>
+    <addaction name="actionDictionary"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuDictionary"/>
+   <addaction name="menuAbout"/>
   </widget>
   <action name="actionExit">
    <property name="icon">
@@ -97,7 +164,7 @@
     <string>Ctrl+Q</string>
    </property>
   </action>
-  <action name="actionAddWord">
+  <action name="actionNewWord">
    <property name="icon">
     <iconset resource="resource.qrc">
      <normaloff>:/icons/ico_word_add.png</normaloff>:/icons/ico_word_add.png</iconset>
@@ -109,7 +176,7 @@
     <string>Add new word to the dictionary</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+N</string>
+    <string>Ctrl+Shift+N</string>
    </property>
   </action>
   <action name="actionDictionary">
@@ -122,6 +189,18 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+D</string>
+   </property>
+  </action>
+  <action name="actionNewText">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/icons/ico_new_text.png</normaloff>:/icons/ico_new_text.png</iconset>
+   </property>
+   <property name="text">
+    <string>New Text</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
    </property>
   </action>
  </widget>
