@@ -4,6 +4,10 @@
 		"selected_items":
 		[
 			[
+				"remove",
+				"remove(const QString &s)	QString &"
+			],
+			[
 				"siz",
 				"resize(int size)	void"
 			],
@@ -38,10 +42,6 @@
 			[
 				"download",
 				"download_nzb_contents(quint32 acc, const QString &path, const QString &desc, const std::vector<const nzbcontent *> &nzb)	bool"
-			],
-			[
-				"remove",
-				"remove(const QRegExp &rx)	QString &"
 			],
 			[
 				"temp",
@@ -163,15 +163,7 @@
 			"file": "mainwindow.h",
 			"settings":
 			{
-				"buffer_size": 2251,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "dlgword.h",
-			"settings":
-			{
-				"buffer_size": 2559,
+				"buffer_size": 2263,
 				"line_ending": "Unix"
 			}
 		},
@@ -179,7 +171,15 @@
 			"file": "dictionary.h",
 			"settings":
 			{
-				"buffer_size": 1950,
+				"buffer_size": 2701,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "dlgdictionary.h",
+			"settings":
+			{
+				"buffer_size": 1984,
 				"line_ending": "Unix"
 			}
 		},
@@ -187,7 +187,7 @@
 			"file": "dictionary.cpp",
 			"settings":
 			{
-				"buffer_size": 3001,
+				"buffer_size": 4513,
 				"line_ending": "Unix"
 			}
 		},
@@ -195,7 +195,23 @@
 			"file": "mainwindow.cpp",
 			"settings":
 			{
-				"buffer_size": 6008,
+				"buffer_size": 6486,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "resource.qrc",
+			"settings":
+			{
+				"buffer_size": 317,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "dlgdictionary.cpp",
+			"settings":
+			{
+				"buffer_size": 6310,
 				"line_ending": "Unix"
 			}
 		}
@@ -203,16 +219,16 @@
 	"build_system": "",
 	"command_palette":
 	{
-		"height": 76.0,
+		"height": 375.0,
 		"selected_items":
 		[
 			[
-				"copy",
-				"Snippet: copyright"
-			],
-			[
 				"comment",
 				"Toggle Comment"
+			],
+			[
+				"copy",
+				"Snippet: copyright"
 			],
 			[
 				"clear",
@@ -372,6 +388,11 @@
 	},
 	"file_history":
 	[
+		"//home/samiv/coding/pinyin-translator/dlgword.h",
+		"//home/samiv/coding/pinyin-translator/dlgdictionary.h",
+		"//home/samiv/coding/pinyin-translator/resource.qrc",
+		"//home/samiv/coding/pinyin-translator/Jamfile",
+		"//home/samiv/coding/pinyin-translator/pime.sublime-project",
 		"//home/samiv/coding/pime/tokenizer.h",
 		"//home/samiv/coding/pime/translator.h",
 		"//home/samiv/coding/pime/dlgword.h",
@@ -494,12 +515,7 @@
 		"//home/samiv/coding/newsflash/engine/types.h",
 		"//home/samiv/coding/newsflash/engine/encoding.cpp",
 		"//home/samiv/coding/newsflash/app/gui/dlgshutdown.h",
-		"//home/samiv/coding/newsflash/www/callhome.php",
-		"//home/samiv/coding/newsflash/www/common.php",
-		"//home/samiv/coding/newsflash/engine/stopwatch.h",
-		"//home/samiv/coding/newsflash/app/gui/coremodule.h",
-		"//home/samiv/coding/newsflash/app/version.cpp",
-		"//home/samiv/coding/newsflash/www/schema.sql"
+		"//home/samiv/coding/newsflash/www/callhome.php"
 	],
 	"find":
 	{
@@ -517,6 +533,10 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"translation_index",
+			"wordguid",
+			"indices",
+			"store",
 			"shortcut",
 			"eraseHistory",
 			"open(",
@@ -640,11 +660,7 @@
 			"cancel",
 			"begin_connect",
 			"TICK(",
-			"logger",
-			"logger_",
-			"begin_connect",
-			"cancel",
-			"connect"
+			"logger"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -688,15 +704,15 @@
 					"file": "mainwindow.h",
 					"settings":
 					{
-						"buffer_size": 2251,
+						"buffer_size": 2263,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2129,
-								2129
+								1893,
+								1893
 							]
 						],
 						"settings":
@@ -713,18 +729,18 @@
 				},
 				{
 					"buffer": 1,
-					"file": "dlgword.h",
+					"file": "dictionary.h",
 					"settings":
 					{
-						"buffer_size": 2559,
+						"buffer_size": 2701,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1620,
-								1620
+								2424,
+								2424
 							]
 						],
 						"settings":
@@ -734,25 +750,25 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 238.0,
+						"translation.y": 294.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 2,
-					"file": "dictionary.h",
+					"file": "dlgdictionary.h",
 					"settings":
 					{
-						"buffer_size": 1950,
+						"buffer_size": 1984,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1786,
-								1786
+								1840,
+								1840
 							]
 						],
 						"settings":
@@ -762,7 +778,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 168.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -778,15 +794,15 @@
 					"file": "dictionary.cpp",
 					"settings":
 					{
-						"buffer_size": 3001,
+						"buffer_size": 4513,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2988,
-								2988
+								3566,
+								3566
 							]
 						],
 						"settings":
@@ -796,7 +812,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 252.0,
+						"translation.y": 1410.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -806,15 +822,15 @@
 					"file": "mainwindow.cpp",
 					"settings":
 					{
-						"buffer_size": 6008,
+						"buffer_size": 6486,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								4936,
-								4936
+								5418,
+								5418
 							]
 						],
 						"settings":
@@ -824,7 +840,61 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1932.0,
+						"translation.y": 2170.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "resource.qrc",
+					"settings":
+					{
+						"buffer_size": 317,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								317,
+								317
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "dlgdictionary.cpp",
+					"settings":
+					{
+						"buffer_size": 6310,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3635,
+								3635
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1344.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -860,7 +930,7 @@
 		"cols":
 		[
 			0.0,
-			0.3671875,
+			0.394270833333,
 			1.0
 		],
 		"rows":

@@ -29,13 +29,7 @@
         </widget>
        </item>
        <item row="0" column="1">
-        <widget class="QLineEdit" name="editInput">
-         <property name="font">
-          <font>
-           <pointsize>12</pointsize>
-          </font>
-         </property>
-        </widget>
+        <widget class="QLineEdit" name="editInput"/>
        </item>
        <item row="1" column="0">
         <widget class="QLabel" name="label_2">
@@ -45,13 +39,7 @@
         </widget>
        </item>
        <item row="1" column="1">
-        <widget class="QLineEdit" name="editPinyin">
-         <property name="font">
-          <font>
-           <pointsize>12</pointsize>
-          </font>
-         </property>
-        </widget>
+        <widget class="QLineEdit" name="editPinyin"/>
        </item>
        <item row="2" column="0">
         <widget class="QLabel" name="label">
@@ -65,11 +53,6 @@
          <property name="enabled">
           <bool>true</bool>
          </property>
-         <property name="font">
-          <font>
-           <pointsize>12</pointsize>
-          </font>
-         </property>
         </widget>
        </item>
       </layout>
@@ -82,13 +65,7 @@
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_3">
        <item>
-        <widget class="QListWidget" name="listWords">
-         <property name="font">
-          <font>
-           <pointsize>12</pointsize>
-          </font>
-         </property>
-        </widget>
+        <widget class="QListWidget" name="listWords"/>
        </item>
       </layout>
      </widget>

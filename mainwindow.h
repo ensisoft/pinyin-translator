@@ -50,7 +50,7 @@ namespace pime
         void on_editInput_textEdited(const QString& text);
     private:
         bool eventFilter(QObject* reciver, QEvent* event) override;
-        void translate(int index);
+        void translate(int index, const QString& key);
         void updateDictionary(const QString& key);
         void updateTranslation();
 

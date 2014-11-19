@@ -91,12 +91,22 @@ void dictionary::save(const QString& file)
 
 std::vector<dictionary::word> dictionary::lookup(const QString& key) const
 {
-    auto lower = words_.lower_bound(key);
-    auto upper = words_.upper_bound(key);
-
     std::vector<word> ret;
+
+    // auto lower = words_.lower_bound(key);
+    // auto upper = words_.upper_bound(key);
+    // for (; lower != upper; ++lower)
+    //     ret.push_back(lower->second);
+
+    auto lower = words_.lower_bound(key);
+    auto upper = words_.end();
     for (; lower != upper; ++lower)
+    {
+        const auto& k = lower->first;
+        if (!k.startsWith(key))
+            break;
         ret.push_back(lower->second);
+    }
 
     return ret;
 }

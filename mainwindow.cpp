@@ -168,7 +168,7 @@ bool MainWindow::eventFilter(QObject* receiver, QEvent* event)
     qDebug() << "List index: " << wordindex;
     qDebug() << "Input word: " << input;
 
-    translate(wordindex-1);                
+    translate(wordindex-1, input);                
     updateTranslation();
     updateDictionary("");
 
@@ -183,17 +183,23 @@ bool MainWindow::eventFilter(QObject* receiver, QEvent* event)
     return true;
 }
 
-void MainWindow::translate(int index)
+void MainWindow::translate(int index, const QString& key)
 {
     if (index >= words_.size())
-        return;
-
-    const auto& word = words_[index];
-
-    token tok;
-    tok.pinyin  = word.pinyin;
-    tok.chinese = word.chinese;
-    line_.push_back(tok);
+    {
+        token tok;
+        tok.pinyin  = key;
+        tok.chinese = key;
+        line_.push_back(tok);
+    }
+    else
+    {
+        const auto& word = words_[index];
+        token tok;
+        tok.pinyin  = word.pinyin;
+        tok.chinese = word.chinese;
+        line_.push_back(tok);
+    }
 }
 
 void MainWindow::updateDictionary(const QString& key)
@@ -208,7 +214,7 @@ void MainWindow::updateDictionary(const QString& key)
         const auto& word = words_[i];
 
         QListWidgetItem* item = new QListWidgetItem();
-        item->setText(QString("%1. %2\t%3\t%4")
+        item->setText(QString("%1.\t%2\t%3\t%4")
             .arg(i + 1)
             .arg(word.chinese)
             .arg(word.pinyin)
