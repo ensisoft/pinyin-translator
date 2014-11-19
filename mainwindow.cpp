@@ -60,8 +60,8 @@ public:
             switch (col)
             {
                 case 0: 
-                    if (row < 9)
-                        return "#" + QString::number(row + 1);
+                    if (row < 12)
+                        return "F" + QString::number(row + 1);
                     else return "";
 
                 case 1: return word.chinese;
@@ -243,15 +243,18 @@ bool MainWindow::eventFilter(QObject* receiver, QEvent* event)
     bool copy_to_clip = false;
     switch (keypress->key())
     {
-        case Qt::Key_1: wordindex = 1; break;
-        case Qt::Key_2: wordindex = 2; break;
-        case Qt::Key_3: wordindex = 3; break;
-        case Qt::Key_4: wordindex = 4; break;
-        case Qt::Key_5: wordindex = 5; break;
-        case Qt::Key_6: wordindex = 6; break;
-        case Qt::Key_7: wordindex = 7; break;
-        case Qt::Key_8: wordindex = 8; break;
-        case Qt::Key_9: wordindex = 9; break;
+        case Qt::Key_F1: wordindex = 1; break;
+        case Qt::Key_F2: wordindex = 2; break;
+        case Qt::Key_F3: wordindex = 3; break;
+        case Qt::Key_F4: wordindex = 4; break;
+        case Qt::Key_F5: wordindex = 5; break;
+        case Qt::Key_F6: wordindex = 6; break;
+        case Qt::Key_F7: wordindex = 7; break;
+        case Qt::Key_F8: wordindex = 8; break;
+        case Qt::Key_F9: wordindex = 9; break;
+        case Qt::Key_F10: wordindex = 10; break;
+        case Qt::Key_F11: wordindex = 11; break;
+        case Qt::Key_F12: wordindex = 12; break;
         case Qt::Key_Space: wordindex = 1; break;
         case Qt::Key_Enter: wordindex = 1; copy_to_clip = true; break;
     }
