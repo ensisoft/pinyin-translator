@@ -25,6 +25,7 @@
 #include "warnpush.h"
 #  include <QtGui/QKeyEvent>
 #  include <QtGui/QClipboard>
+#  include <QtGui/QStyleFactory>
 #  include <QtDebug>
 #  include <QDir>
 #  include <QFileInfo>
@@ -43,9 +44,95 @@
 namespace pime
 {
 
-MainWindow::MainWindow()
+class MainWindow::DicModel : public QAbstractTableModel
+{
+public:
+    DicModel(dictionary& dic) : dic_(dic)
+    {}
+
+    virtual QVariant data(const QModelIndex& index, int role) const override
+    {
+        const auto row = index.row();
+        const auto col = index.column();
+        if (role == Qt::DisplayRole)
+        {
+            const auto& word = words_[row];
+            switch (col)
+            {
+                case 0: 
+                    if (row < 9)
+                        return "#" + QString::number(row + 1);
+                    else return "";
+
+                case 1: return word.chinese;
+                case 2: return word.pinyin;
+                case 3: return word.description;
+            }            
+        }
+        return QVariant();        
+    }
+
+    virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const override
+    {
+        if (role == Qt::DisplayRole &&
+            orientation == Qt::Horizontal)
+        {
+            switch (section)
+            {
+                case 0: return "Shortcut";
+                case 1: return "Chinese";
+                case 2: return "Pinyin";
+                case 3: return "Definition";
+            }
+        }
+        return QVariant();
+    }
+    virtual int rowCount(const QModelIndex&) const override
+    { 
+        return (int)words_.size();
+    }
+    virtual int columnCount(const QModelIndex&) const override
+    {
+        return 4;
+    }
+
+    void load(const QString& file)
+    {
+        dic_.load(file);
+    }
+    void save(const QString& file)
+    {
+        dic_.save(file);
+    }
+
+    std::size_t size() const 
+    {
+        return words_.size();
+    }
+
+    void store(dictionary::word word)
+    {
+        dic_.store(word);
+    }
+    void update(const QString& key)
+    {
+        words_ = dic_.lookup(key);
+        reset();
+    }
+    const dictionary::word& getWord(std::size_t i) const 
+    {
+        return words_[i];
+    }
+
+private:
+    std::vector<dictionary::word> words_;
+    dictionary& dic_;
+};
+
+MainWindow::MainWindow() : model_(new DicModel(dic_))
 {
     ui_.setupUi(this);
+    ui_.tableView->setModel(model_.get());
 
     const auto& home = QDir::homePath();
     const auto& pime = home + "/.pime";
@@ -71,6 +158,14 @@ MainWindow::MainWindow()
     resize(wwidth, wheight);
 
     ui_.editInput->installEventFilter(this);
+
+    updateDictionary("");
+
+    QStyle* style = QApplication::setStyle("Cleanlooks");
+    if (style)
+    {
+        QApplication::setPalette(style->standardPalette());
+    }
 }
 
 MainWindow::~MainWindow()
@@ -107,10 +202,9 @@ void MainWindow::on_actionNewWord_triggered()
     word.description = dlg.desc();
     word.tags        = 0;
     dic_.store(word);
+    model_->update(key);
 
     NOTE(QString("Added %1").arg(word.chinese));
-
-    updateDictionary(key);
 }
 
 void MainWindow::on_actionNewText_triggered()
@@ -185,20 +279,20 @@ bool MainWindow::eventFilter(QObject* receiver, QEvent* event)
 
 void MainWindow::translate(int index, const QString& key)
 {
-    if (index >= words_.size())
+    if (index >= model_->size())
     {
-        token tok;
-        tok.pinyin  = key;
-        tok.chinese = key;
-        line_.push_back(tok);
+        word w;
+        w.pinyin  = key;
+        w.chinese = key;
+        line_.push_back(w);
     }
     else
     {
-        const auto& word = words_[index];
-        token tok;
-        tok.pinyin  = word.pinyin;
-        tok.chinese = word.chinese;
-        line_.push_back(tok);
+        const auto& translate = model_->getWord(index);
+        word w;
+        w.pinyin  = translate.pinyin;
+        w.chinese = translate.chinese;
+        line_.push_back(w);
     }
 }
 
@@ -206,21 +300,23 @@ void MainWindow::updateDictionary(const QString& key)
 {
     qDebug() << "Dictionary key: " << key;
 
-    ui_.listWords->clear();
+    model_->update(key);
 
-    words_ = dic_.lookup(key);
-    for (size_t i=0; i<words_.size(); ++i)
-    {
-        const auto& word = words_[i];
-
-        QListWidgetItem* item = new QListWidgetItem();
-        item->setText(QString("%1.\t%2\t%3\t%4")
-            .arg(i + 1)
-            .arg(word.chinese)
-            .arg(word.pinyin)
-            .arg(word.description));
-        ui_.listWords->addItem(item);
-    }
+//     ui_.listWords->clear();
+//
+//     words_ = dic_.lookup(key);
+//     for (size_t i=0; i<words_.size(); ++i)
+//     {
+//         const auto& word = words_[i];
+//
+//         QListWidgetItem* item = new QListWidgetItem();
+//         item->setText(QString("%1.\t%2\t%3\t%4")
+//             .arg(i + 1)
+//             .arg(word.chinese)
+//             .arg(word.pinyin)
+//             .arg(word.description));
+//         ui_.listWords->addItem(item);
+//     }
 }
 
 void MainWindow::updateTranslation()

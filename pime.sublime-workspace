@@ -163,23 +163,15 @@
 			"file": "mainwindow.h",
 			"settings":
 			{
-				"buffer_size": 2263,
+				"buffer_size": 2285,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "dictionary.h",
+			"file": "dlgdictionary.cpp",
 			"settings":
 			{
-				"buffer_size": 2701,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "dlgdictionary.h",
-			"settings":
-			{
-				"buffer_size": 1984,
+				"buffer_size": 6343,
 				"line_ending": "Unix"
 			}
 		},
@@ -187,15 +179,7 @@
 			"file": "dictionary.cpp",
 			"settings":
 			{
-				"buffer_size": 4513,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "mainwindow.cpp",
-			"settings":
-			{
-				"buffer_size": 6486,
+				"buffer_size": 4774,
 				"line_ending": "Unix"
 			}
 		},
@@ -208,10 +192,10 @@
 			}
 		},
 		{
-			"file": "dlgdictionary.cpp",
+			"file": "mainwindow.cpp",
 			"settings":
 			{
-				"buffer_size": 6310,
+				"buffer_size": 8858,
 				"line_ending": "Unix"
 			}
 		}
@@ -219,7 +203,7 @@
 	"build_system": "",
 	"command_palette":
 	{
-		"height": 375.0,
+		"height": 76.0,
 		"selected_items":
 		[
 			[
@@ -388,8 +372,9 @@
 	},
 	"file_history":
 	[
-		"//home/samiv/coding/pinyin-translator/dlgword.h",
+		"//home/samiv/coding/pinyin-translator/dictionary.h",
 		"//home/samiv/coding/pinyin-translator/dlgdictionary.h",
+		"//home/samiv/coding/pinyin-translator/dlgword.h",
 		"//home/samiv/coding/pinyin-translator/resource.qrc",
 		"//home/samiv/coding/pinyin-translator/Jamfile",
 		"//home/samiv/coding/pinyin-translator/pime.sublime-project",
@@ -514,8 +499,7 @@
 		"//home/samiv/coding/newsflash/engine/unit_test/unit_test_bodylist.cpp",
 		"//home/samiv/coding/newsflash/engine/types.h",
 		"//home/samiv/coding/newsflash/engine/encoding.cpp",
-		"//home/samiv/coding/newsflash/app/gui/dlgshutdown.h",
-		"//home/samiv/coding/newsflash/www/callhome.php"
+		"//home/samiv/coding/newsflash/app/gui/dlgshutdown.h"
 	],
 	"find":
 	{
@@ -704,15 +688,15 @@
 					"file": "mainwindow.h",
 					"settings":
 					{
-						"buffer_size": 2263,
+						"buffer_size": 2285,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1893,
-								1893
+								1922,
+								1922
 							]
 						],
 						"settings":
@@ -722,25 +706,25 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 252.0,
+						"translation.y": 378.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "dictionary.h",
+					"file": "dlgdictionary.cpp",
 					"settings":
 					{
-						"buffer_size": 2701,
+						"buffer_size": 6343,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2424,
-								2424
+								2877,
+								2877
 							]
 						],
 						"settings":
@@ -750,35 +734,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 294.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "dlgdictionary.h",
-					"settings":
-					{
-						"buffer_size": 1984,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1840,
-								1840
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 168.0,
+						"translation.y": 1274.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -786,23 +742,23 @@
 			]
 		},
 		{
-			"selected": 1,
+			"selected": 2,
 			"sheets":
 			[
 				{
-					"buffer": 3,
+					"buffer": 2,
 					"file": "dictionary.cpp",
 					"settings":
 					{
-						"buffer_size": 4513,
+						"buffer_size": 4774,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								3566,
-								3566
+								3270,
+								3270
 							]
 						],
 						"settings":
@@ -812,41 +768,13 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1410.0,
+						"translation.y": 822.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 4,
-					"file": "mainwindow.cpp",
-					"settings":
-					{
-						"buffer_size": 6486,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								5418,
-								5418
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 2170.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 5,
+					"buffer": 3,
 					"file": "resource.qrc",
 					"settings":
 					{
@@ -872,19 +800,19 @@
 					"type": "text"
 				},
 				{
-					"buffer": 6,
-					"file": "dlgdictionary.cpp",
+					"buffer": 4,
+					"file": "mainwindow.cpp",
 					"settings":
 					{
-						"buffer_size": 6310,
+						"buffer_size": 8858,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								3635,
-								3635
+								2169,
+								2169
 							]
 						],
 						"settings":
@@ -894,7 +822,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1344.0,
+						"translation.y": 518.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -930,7 +858,7 @@
 		"cols":
 		[
 			0.0,
-			0.394270833333,
+			0.384374999999,
 			1.0
 		],
 		"rows":

@@ -23,6 +23,7 @@
 #include "config.h"
 #include "warnpush.h"
 #  include <QSettings>
+#  include <QAbstractTableModel>
 #include "warnpop.h"
 
 #include "dlgdictionary.h"

@@ -30,6 +30,7 @@
 #  include "ui_mainwindow.h"
 #include "warnpop.h"
 #include <list>
+#include <memory>
 #include "dictionary.h"
 
 namespace pime
@@ -55,18 +56,18 @@ namespace pime
         void updateTranslation();
 
     private:
-        struct token {
+        class DicModel;
+
+        struct word {
             QString pinyin;
             QString chinese;
         };
-        std::list<token> line_;
-        std::vector<dictionary::word> words_;
+        std::list<word> line_;
+        std::unique_ptr<DicModel> model_;
+        dictionary dic_;
 
     private:
         Ui::MainWindow ui_;
-
-    private:
-        dictionary dic_; 
     };
 
 } // pime

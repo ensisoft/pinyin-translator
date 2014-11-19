@@ -26,7 +26,6 @@
 
 #include "warnpush.h"
 #  include <QtGui/QDialog>
-#  include <QAbstractTableModel>
 #  include "ui_dlgdictionary.h"
 #include "warnpop.h"
 #include <memory>
