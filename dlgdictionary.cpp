@@ -78,17 +78,17 @@ public:
         return 3;
     }
 
-    void update(const QString& key)
+    void filter(const QString& str)
     {
-        if (key.isEmpty())
+        if (str.isEmpty())
             words_ = dic_.flatten();
-        else words_ = dic_.lookup(key);
+        else words_ = dic_.search(str);
 
         reset();
 
-        search_ = key;
-
+        search_ = str;
     }
+
     std::size_t wordCountTotal() const
     { return dic_.wordCount(); }
 
@@ -118,7 +118,21 @@ public:
     }
 
     void deleteWords(QModelIndexList& indices)
-    {}
+    {
+        // todo: maybe allow multiple rows to be deleted later
+        Q_ASSERT(indices.size() == 1);
+
+        const auto row  = indices[0].row();
+        const auto word = words_[row];
+        beginRemoveRows(QModelIndex(), row, row);
+
+        dic_.erase(word);
+        auto it = words_.begin();
+        std::advance(it, row);
+        words_.erase(it);
+
+        endRemoveRows();
+    }
 
     const dictionary::word& getWord(std::size_t i)
     {
@@ -158,7 +172,7 @@ DlgDictionary::~DlgDictionary()
 
 void DlgDictionary::updateTable(const QString& search)
 {
-    model_->update(search);
+    model_->filter(search);
     const auto total = model_->wordCountTotal();
     const auto shown = model_->wordCountShown();
 
@@ -178,7 +192,7 @@ void DlgDictionary::on_btnAdd_clicked()
     word.chinese     = dlg.chinese();
     word.description = dlg.desc();
     word.pinyin      = dlg.pinyin();
-    word.tags        = 0;
+    word.meta        = 1;
     
     model_->store(word);
 }
@@ -230,6 +244,11 @@ void DlgDictionary::on_btnClose_clicked()
 void DlgDictionary::on_tableView_doubleClicked(const QModelIndex&)
 {
     on_btnEdit_clicked();
+}
+
+void DlgDictionary::on_editSearch_textEdited(const QString& text)
+{
+    updateTable(text);
 }
 
 } // pime

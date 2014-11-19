@@ -34,18 +34,13 @@
 namespace pime
 {
 
-dictionary::dictionary(const QString& file) : wordguid_(1)
-{
-    load(file);
-}
-
-dictionary::dictionary()
+dictionary::dictionary() : wordguid_(1)
 {}
 
 dictionary::~dictionary()
 {}
 
-void dictionary::load(const QString& file)
+void dictionary::load(const QString& file, quint32 metakey)
 {
     QFile io(file);
     if (!io.open(QIODevice::ReadOnly))
@@ -65,12 +60,25 @@ void dictionary::load(const QString& file)
         word.pinyin      = toks[2];
         word.description = toks[3];
         word.guid        = wordguid_++;
-        word.tags        = 0;
-        words_.insert(std::make_pair(key, word));
+        word.meta        = metakey;
+
+        bool duplicate = false;
+        auto lower = words_.lower_bound(key);
+        auto upper = words_.upper_bound(key);
+        for (; lower != upper; ++lower)
+        {
+            if (lower->second.pinyin == word.pinyin)
+            {
+                duplicate = true;
+                break;
+            }
+        }
+        if (!duplicate)
+            words_.insert(std::make_pair(key, word));
     }
 }
 
-void dictionary::save(const QString& file)
+void dictionary::save(const QString& file, quint32 metakey)
 {
     QFile io(file);
     if (!io.open(QIODevice::WriteOnly | QIODevice::Truncate))
@@ -85,6 +93,8 @@ void dictionary::save(const QString& file)
     {
         const auto& key  = beg->first;
         const auto& word = beg->second;
+        if (word.meta != metakey)
+            continue;
         stream << key << "|" << word.chinese << "|" << word.pinyin << "|" << word.description << "\n";
     }
 }
@@ -106,6 +116,22 @@ std::vector<dictionary::word> dictionary::lookup(const QString& key) const
         if (!k.startsWith(key))
             break;
         ret.push_back(lower->second);
+    }
+
+    return ret;
+}
+
+std::vector<dictionary::word> dictionary::search(const QString& str) const
+{
+    std::vector<word> ret;
+
+    auto beg = words_.begin();
+    auto end = words_.end();
+    for (; beg != end; ++beg)
+    {
+        const auto& definition = beg->second.description;
+        if (definition.indexOf(str) != -1)
+            ret.push_back(beg->second);
     }
 
     return ret;

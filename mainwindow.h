@@ -31,6 +31,7 @@
 #include "warnpop.h"
 #include <list>
 #include <memory>
+#include <map>
 #include "dictionary.h"
 
 namespace pime
@@ -62,8 +63,14 @@ namespace pime
             QString pinyin;
             QString chinese;
         };
+        struct meta {
+            QString file;
+            quint32 metaid;
+        };
+
         std::list<word> line_;
         std::unique_ptr<DicModel> model_;
+        std::map<quint32, meta> meta_;
         dictionary dic_;
 
     private:

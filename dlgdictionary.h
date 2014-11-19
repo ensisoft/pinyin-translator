@@ -51,6 +51,7 @@ namespace pime
         void on_btnEdit_clicked();
         void on_btnClose_clicked();
         void on_tableView_doubleClicked(const QModelIndex&);
+        void on_editSearch_textEdited(const QString& text);
 
     private:
         Ui::Dictionary ui_;

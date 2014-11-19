@@ -40,22 +40,25 @@ namespace pime
             QString chinese;
             QString pinyin;
             QString description;
-            quint32 tags;
+            quint32 meta;
             quint32 guid;
         };
 
-        dictionary(const QString& file);
         dictionary();
        ~dictionary();
 
-        // load a dictionary from a file.
-        void load(const QString& file);
+        // load a dictionary file
+        void load(const QString& file, quint32 metakey);
 
         // save the in memory contents of the dictionary to a file
-        void save(const QString& file);
+        void save(const QString& file, quint32 metakey);
 
-        // lookup a list of works with the given key in the dictionary.
+        // lookup a list of words with the given key in the dictionary.
         std::vector<word> lookup(const QString& key) const;
+
+        // search the definitions of the word for the given substring
+        // and return those that match.
+        std::vector<word> search(const QString& str) const;
 
         // flatten the whole dictionary into a list.
         std::vector<word> flatten() const;
@@ -72,7 +75,6 @@ namespace pime
         std::size_t wordCount() const 
         { return words_.size(); }
     private:
-        QString filename_;
         quint32 wordguid_;
 
     private:

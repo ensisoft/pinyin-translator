@@ -95,16 +95,6 @@ public:
     {
         return 4;
     }
-
-    void load(const QString& file)
-    {
-        dic_.load(file);
-    }
-    void save(const QString& file)
-    {
-        dic_.save(file);
-    }
-
     std::size_t size() const 
     {
         return words_.size();
@@ -135,18 +125,43 @@ MainWindow::MainWindow() : model_(new DicModel(dic_))
     ui_.tableView->setModel(model_.get());
 
     const auto& home = QDir::homePath();
-    const auto& pime = home + "/.pime";
-    const auto& file = pime + "/dictionary";
+    const auto& pime = home + "/.pime/";
+    const auto& local = pime + "local.dic";
 
     QDir dir(pime);
     if (!dir.mkpath(pime))
         throw std::runtime_error("failed to create ~/.pime");
 
-    if (QFileInfo(file).exists())
+    quint32 metaid = 1;
+    meta data;
+    data.file   = local;
+    data.metaid = metaid;
+    meta_.insert(std::make_pair(metaid, data));
+    if (QFileInfo(local).exists())
     {
-        dic_.load(file);
-        NOTE(QString("Loaded dictionary with %1 words").arg(dic_.wordCount()));
+        dic_.load(local, metaid);
+        qDebug() << "Loaded local dictionary " << local;
     }
+
+    ++metaid;
+    QStringList filter("*.dic");
+    QStringList dics = dir.entryList(filter);
+    for (const auto& file : dics)
+    {
+        if (file == "local.dic")
+            continue;
+
+        meta data;
+        data.file = pime + file;
+        data.metaid = metaid;
+        qDebug() << "Loading: " << pime + file;
+
+        dic_.load(pime + file, metaid);
+        meta_.insert(std::make_pair(metaid, data));
+        ++metaid;
+    }
+
+    NOTE(QString("Loaded dictionary with %1 words").arg(dic_.wordCount()));            
 
     QSettings settings("Ensisoft", "Pime");
     const auto wwidth  = settings.value("window/width", width()).toInt();
@@ -176,10 +191,14 @@ MainWindow::~MainWindow()
     settings.setValue("window/xpos", x());
     settings.setValue("window/ypos", y());
 
-    const auto& home = QDir::homePath();
-    const auto& pime = home + "/.pime";
-    const auto& file = pime + "/dictionary";
-    dic_.save(file);
+    for (const auto& meta : meta_)
+    {
+        const auto& file = meta.second.file;
+        const auto& metaid = meta.second.metaid;
+        dic_.save(file, metaid);
+
+        qDebug() << "Saving words to " << file;
+    }
 }
 
 void MainWindow::on_actionExit_triggered()
@@ -200,7 +219,7 @@ void MainWindow::on_actionNewWord_triggered()
     word.chinese     = dlg.chinese();
     word.pinyin      = dlg.pinyin();
     word.description = dlg.desc();
-    word.tags        = 0;
+    word.meta        = 1;
     dic_.store(word);
     model_->update(key);
 
