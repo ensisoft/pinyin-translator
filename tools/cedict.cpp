@@ -26,6 +26,8 @@
 #  include "../pinyin.h"
 #include "../warnpop.h"
 
+// data file location
+// http://www.mdbg.net/chindict/chindict.php?page=cc-cedict
 
 #include <string>
 #include <iostream>
@@ -98,9 +100,11 @@ std::string make_dictionary_pinyin(std::string pinyin)
                 const auto tone = next_letter - '0';
                 // the CEDIC dictionary format uses 5 tones but the 5th tone 
                 // is the neutral tone and is simply represented by the "toneless" vowel
-                assert(tone >= 1);
-                assert(tone <= 5);
+                if (tone == 5)
+                    break;
 
+                assert(tone >= 1);
+                assert(tone <= 4);
                 if (tonepos == -1)
                 {
                     // take the last vowel
@@ -184,10 +188,17 @@ void process_word(word w, std::ostream& out)
 
 int main(int argc, char* argv[])
 {
-    //std::cout << make_dictionary_pinyin("chao3") << "\n";
-    //std::cout << make_dictionary_pinyin("chao2") << "\n";   
-    //std::cout << make_dictionary_pinyin("mei3 guo2") << "\n";
-    //return 0;
+    // simple ad-hoc test cases
+    // std::cout << make_dictionary_pinyin("huo3 guo3") << "\n";
+    // std::cout << make_dictionary_pinyin("chao3") << "\n";
+    // std::cout << make_dictionary_pinyin("chao2") << "\n";   
+    // std::cout << make_dictionary_pinyin("mei3 guo2") << "\n";
+    // std::cout << make_dictionary_pinyin("ma") << "\n";
+    // std::cout << make_dictionary_pinyin("ma3") << "\n";
+    // std::cout << make_dictionary_pinyin("ma5") << "\n";
+    // std::cout << make_dictionary_pinyin("e3") << "\n";
+    // std::cout << make_dictionary_pinyin("e5") << "\n";    
+    // return 0;
 
     if (argc < 3)
     {
@@ -215,6 +226,7 @@ int main(int argc, char* argv[])
 
     std::string line;
     std::size_t lineno = 0;
+    std::size_t wordno = 0;
     while (!in.eof())
     {
         std::getline(in, line);
@@ -240,7 +252,9 @@ int main(int argc, char* argv[])
             return 1;
         }
         process_word(std::move(w), out);
+        wordno++;
     }
 
+    std::cout << "\rDone with " << wordno << " words!\n";
     return 0;
 }

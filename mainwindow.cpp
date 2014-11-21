@@ -296,7 +296,7 @@ void MainWindow::on_actionNewWord_triggered()
 {
     const auto key = ui_.editInput->text();
 
-    DlgWord dlg(this);
+    DlgWord dlg(font_, this);
     if (dlg.exec() == QDialog::Rejected)
         return;
 

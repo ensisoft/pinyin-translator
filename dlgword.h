@@ -36,13 +36,15 @@ namespace pime
         Q_OBJECT
 
     public:
-        DlgWord(QWidget* parent) : QDialog(parent)
+        DlgWord(QFont font, QWidget* parent) : QDialog(parent)
         {
             ui_.setupUi(this);
             ui_.editPinyin->setFocus();
+            ui_.editSimplified->setFont(font);
+            ui_.editTraditional->setFont(font);
         }
 
-        DlgWord(QWidget* parent,
+        DlgWord(QFont font, QWidget* parent,
             const QString& pinyin,
             const QString& traditional,
             const QString& simplified,
@@ -51,8 +53,11 @@ namespace pime
             ui_.setupUi(this);
             ui_.editPinyin->setText(pinyin);
             ui_.editTraditional->setText(traditional);            
+            ui_.editTraditional->setFont(font);
             ui_.editSimplified->setText(simplified);
+            ui_.editSimplified->setFont(font);
             ui_.editDescription->setText(desc);
+            ui_.editDescription->setCursorPosition(0);
         }
 
        ~DlgWord()

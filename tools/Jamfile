@@ -1,5 +1,13 @@
 
+import path ;
 
-project tools ;
+path-constant BOOST : "../../boost_1_51_0" ;
+
+use-project /boost/ : $(BOOST) ;
+
+project tools :
+  requirements
+  <include>$(BOOST)
+;
 
 exe cedict : cedict.cpp ;

@@ -150,6 +150,8 @@ public:
     {
         font_ = font;
     }
+    QFont getChFont() const
+    { return font_; }
 private:
     dictionary& dic_;
     std::vector<const dictionary::word*> words_;
@@ -163,7 +165,6 @@ DlgDictionary::DlgDictionary(QFont font, QWidget* parent, dictionary& dic) : QDi
 {
     ui_.setupUi(this);
     ui_.tableView->setModel(model_.get());
-    //ui_.tableView->setFont(font);
     model_->setChFont(font);
 
     QSettings settings("Ensisoft", "Pime");
@@ -201,7 +202,9 @@ void DlgDictionary::updateWordCount()
 
 void DlgDictionary::on_btnAdd_clicked()
 {
-    DlgWord dlg(this);
+    QFont font = model_->getChFont();
+
+    DlgWord dlg(font, this);
     if (dlg.exec() == QDialog::Rejected)
         return;
 
@@ -235,11 +238,13 @@ void DlgDictionary::on_btnEdit_clicked()
     if (rows.isEmpty())
         return;
 
+    QFont font = model_->getChFont();
+
     for (auto i=0; i<rows.size(); ++i)
     {
         auto row = rows[i].row();
         auto word = model_->getWord(row);
-        DlgWord dlg(this, 
+        DlgWord dlg(font, this, 
             word.pinyin,
             word.traditional,
             word.simplified,

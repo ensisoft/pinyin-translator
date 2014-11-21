@@ -26,6 +26,7 @@
 
 #include "warnpush.h"
 #  include <QtGui/QDialog>
+#  include <QtGui/QFont>
 #  include "ui_dlgdictionary.h"
 #include "warnpop.h"
 #include <memory>
@@ -60,5 +61,6 @@ namespace pime
     private:
         class TableModel;
         std::unique_ptr<TableModel> model_;
+
     };
 } // pime
