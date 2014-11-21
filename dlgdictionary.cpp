@@ -54,6 +54,11 @@ public:
                 case 3: return word.description;
             }
         }
+        else if (role == Qt::FontRole)
+        {
+            if (col == 0 || col == 1)
+                return font_;
+        }
         return QVariant();
     }
     virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const override
@@ -141,19 +146,25 @@ public:
         return *words_[i];
     }
 
-
+    void setChFont(QFont font)
+    {
+        font_ = font;
+    }
 private:
     dictionary& dic_;
     std::vector<const dictionary::word*> words_;
 private:
     QString search_;
+    QFont font_;
 };
 
 
-DlgDictionary::DlgDictionary(QWidget* parent, dictionary& dic) : QDialog(parent), model_(new TableModel(dic))
+DlgDictionary::DlgDictionary(QFont font, QWidget* parent, dictionary& dic) : QDialog(parent), model_(new TableModel(dic))
 {
     ui_.setupUi(this);
     ui_.tableView->setModel(model_.get());
+    //ui_.tableView->setFont(font);
+    model_->setChFont(font);
 
     QSettings settings("Ensisoft", "Pime");
     const auto wwidth = settings.value("dictionary-window/width", width()).toInt();

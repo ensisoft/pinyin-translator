@@ -39,7 +39,7 @@ namespace pime
         Q_OBJECT
 
     public:
-        DlgDictionary(QWidget* parent, dictionary& dic);
+        DlgDictionary(QFont font, QWidget* parent, dictionary& dic);
        ~DlgDictionary();
 
     private:

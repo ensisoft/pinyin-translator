@@ -11,5 +11,6 @@
     <file>icons/ico_traditional.png</file>
     <file>icons/ico_simplified.png</file>
     <file>icons/ico_about.png</file>
+    <file>icons/ico_font.png</file>
   </qresource>
 </RCC>

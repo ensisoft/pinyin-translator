@@ -27,6 +27,7 @@
 #  include <QtGui/QClipboard>
 #  include <QtGui/QStyleFactory>
 #  include <QtGui/QMessageBox>
+#  include <QtGui/QFontDialog>
 #  include <QtDebug>
 #  include <QDir>
 #  include <QFileInfo>
@@ -72,6 +73,11 @@ public:
                 case 2: return word.pinyin;
                 case 3: return word.description;
             }            
+        }
+        else if (role == Qt::FontRole)
+        {
+            if (col == 1)
+                return chfont_;
         }
         return QVariant();        
     }
@@ -126,10 +132,18 @@ public:
         emit dataChanged(first, last);
     }
 
+    void setChFont(QFont font)
+    {
+        chfont_ = font;
+        auto first = QAbstractTableModel::index(0, 0);
+        auto last  = QAbstractTableModel::index(words_.size(), 4);
+        emit dataChanged(first, last);
+    }
 private:
     std::vector<const dictionary::word*> words_;
     dictionary& dic_;
     bool traditional_;
+    QFont chfont_;
 };
 
 MainWindow::MainWindow() : model_(new DicModel(dic_))
@@ -183,6 +197,14 @@ MainWindow::MainWindow() : model_(new DicModel(dic_))
     const auto xpos   = settings.value("window/xpos", x()).toInt();
     const auto ypos   = settings.value("window/ypos", y()).toInt();
     const auto traditional = settings.value("window/traditional", true).toBool();
+    const auto font = settings.value("window/font").toString();
+    if (!font.isEmpty())
+    {
+        QFont f;
+        if (f.fromString(font))
+            setFont(f);
+    }
+
     ui_.actionTraditional->setChecked(traditional);
     ui_.actionSimplified->setChecked(!traditional);
     ui_.editInput->installEventFilter(this);    
@@ -210,6 +232,7 @@ MainWindow::~MainWindow()
     settings.setValue("window/xpos", x());
     settings.setValue("window/ypos", y());
     settings.setValue("window/traditional", ui_.actionTraditional->isChecked());
+    settings.setValue("window/font", font_.toString());
 
     for (const auto& meta : meta_)
     {
@@ -262,7 +285,7 @@ void MainWindow::on_actionNewText_triggered()
 
 void MainWindow::on_actionDictionary_triggered()
 {
-    DlgDictionary dlg(this, dic_);
+    DlgDictionary dlg(font_, this, dic_);
     dlg.exec();
 
     updateWordCount();
@@ -306,6 +329,16 @@ void MainWindow::on_actionAbout_triggered()
     msg.exec();
 }
 
+void MainWindow::on_actionFont_triggered()
+{
+    QFontDialog dlg(font_, this);
+    if (dlg.exec() == QDialog::Rejected)
+        return;
+
+    QFont font = dlg.selectedFont();
+    setFont(font);
+}
+
 void MainWindow::on_editInput_textEdited(const QString& text)
 {
     updateDictionary(text);
@@ -324,6 +357,7 @@ void MainWindow::on_tableView_doubleClicked(const QModelIndex& index)
     updateDictionary("");
 
     ui_.editInput->clear();
+    ui_.editInput->setFocus();
 }
 
 bool MainWindow::eventFilter(QObject* receiver, QEvent* event)
@@ -443,6 +477,19 @@ void MainWindow::updateWordCount()
 {
     ui_.lblInfoText->setText(
         QString("%1 words").arg(dic_.wordCount()));
+}
+
+void MainWindow::setFont(QFont font)
+{
+    //ui_.editInput->setFont(font);
+    //ui_.editPinyin->setFont(font);
+    ui_.editChinese->setFont(font);
+    model_->setChFont(font);
+    //ui_.tableView->setFont(font);
+
+    qDebug() << "Font set to: " << font.rawName() << " " << font.pixelSize() << " px";
+
+    font_ = font;
 }
 
 } // pime

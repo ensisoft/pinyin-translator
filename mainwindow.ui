@@ -161,6 +161,8 @@
    <addaction name="separator"/>
    <addaction name="actionTraditional"/>
    <addaction name="actionSimplified"/>
+   <addaction name="separator"/>
+   <addaction name="actionFont"/>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -259,6 +261,9 @@
    <property name="text">
     <string>Traditional</string>
    </property>
+   <property name="toolTip">
+    <string>Use traditional chinese</string>
+   </property>
   </action>
   <action name="actionSimplified">
    <property name="checkable">
@@ -271,6 +276,9 @@
    <property name="text">
     <string>Simplified</string>
    </property>
+   <property name="toolTip">
+    <string>Use simplified chinese</string>
+   </property>
   </action>
   <action name="actionAbout">
    <property name="icon">
@@ -279,6 +287,18 @@
    </property>
    <property name="text">
     <string>About</string>
+   </property>
+  </action>
+  <action name="actionFont">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/icons/ico_font.png</normaloff>:/icons/ico_font.png</iconset>
+   </property>
+   <property name="text">
+    <string>Ch Font</string>
+   </property>
+   <property name="toolTip">
+    <string>Change the font for Chinese text</string>
    </property>
   </action>
  </widget>

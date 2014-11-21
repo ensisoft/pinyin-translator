@@ -26,6 +26,7 @@
 
 #include "warnpush.h"
 #  include <QtGui/QMainWindow>
+#  include <QtGui/QFont>
 #  include <QObject>
 #  include "ui_mainwindow.h"
 #include "warnpop.h"
@@ -52,6 +53,7 @@ namespace pime
         void on_actionSimplified_triggered();
         void on_actionDictionary_triggered();
         void on_actionAbout_triggered();
+        void on_actionFont_triggered();
         void on_editInput_textEdited(const QString& text);
         void on_tableView_doubleClicked(const QModelIndex& index);
     private:
@@ -60,6 +62,7 @@ namespace pime
         void updateDictionary(const QString& key);
         void updateTranslation();
         void updateWordCount();
+        void setFont(QFont f);
 
     private:
         class DicModel;
@@ -81,6 +84,8 @@ namespace pime
 
     private:
         Ui::MainWindow ui_;
+    private:
+        QFont font_;
     };
 
 } // pime
