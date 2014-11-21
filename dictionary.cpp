@@ -62,19 +62,19 @@ void dictionary::load(const QString& file, quint32 metakey)
         word.guid        = wordguid_++;
         word.meta        = metakey;
 
-        bool duplicate = false;
-        auto lower = words_.lower_bound(key);
-        auto upper = words_.upper_bound(key);
-        for (; lower != upper; ++lower)
-        {
-            if (lower->second.pinyin == word.pinyin)
-            {
-                duplicate = true;
-                break;
-            }
-        }
-        if (!duplicate)
-            words_.insert(std::make_pair(key, word));
+        // bool duplicate = false;
+        // auto lower = words_.lower_bound(key);
+        // auto upper = words_.upper_bound(key);
+        // for (; lower != upper; ++lower)
+        // {
+        //     if (lower->second.pinyin == word.pinyin)
+        //     {
+        //         duplicate = true;
+        //         break;
+        //     }
+        // }
+        //if (!duplicate)
+        words_.insert(std::make_pair(key, word));
     }
 }
 

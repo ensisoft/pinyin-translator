@@ -1,0 +1,5 @@
+
+
+project tools ;
+
+exe cedict : cedict.cpp ;
