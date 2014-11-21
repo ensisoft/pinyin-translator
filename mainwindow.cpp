@@ -391,6 +391,10 @@ void MainWindow::on_actionFont_triggered()
     setFont(font);
 }
 
+void MainWindow::on_actionFind_triggered()
+{
+}
+
 void MainWindow::on_editInput_textEdited(const QString& text)
 {
     if (!text.isEmpty())
@@ -480,6 +484,12 @@ void MainWindow::closeEvent(QCloseEvent* close)
     qDebug() << "closeEvent";
     if (saveData())
         close->accept();
+
+    if (dlg_)
+    {
+        dlg_->close();
+        dlg_.reset();
+    }
 }
 
 void MainWindow::translate(int index, const QString& key)

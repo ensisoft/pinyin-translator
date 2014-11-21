@@ -59,6 +59,7 @@ namespace pime
         void on_actionDictionary_triggered();
         void on_actionAbout_triggered();
         void on_actionFont_triggered();
+        void on_actionFind_triggered();
         void on_editInput_textEdited(const QString& text);
         void on_tableView_doubleClicked(const QModelIndex& index);
     private:
