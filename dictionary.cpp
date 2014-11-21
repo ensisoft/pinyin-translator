@@ -31,6 +31,7 @@
 #include <stdexcept>
 
 #include "dictionary.h"
+#include "format.h"
 
 QString make_dictionary_key(const QString& pinyin)
 {
@@ -56,7 +57,7 @@ void dictionary::load(const QString& file, quint32 metakey)
 {
     QFile io(file);
     if (!io.open(QIODevice::ReadOnly))
-        throw std::runtime_error("open dictionary failed");
+        throw std::runtime_error(utf8("open dictionary failed: _1", file));
 
     QTextStream stream(&io);
     stream.setCodec("UTF-8");
@@ -98,7 +99,7 @@ void dictionary::save(const QString& file, quint32 metakey)
 {
     QFile io(file);
     if (!io.open(QIODevice::WriteOnly | QIODevice::Truncate))
-        throw std::runtime_error("open dictionary failed");
+        throw std::runtime_error(utf8("save dictionary failed: _1", file));
 
     QTextStream stream(&io);
     stream.setCodec("UTF-8");

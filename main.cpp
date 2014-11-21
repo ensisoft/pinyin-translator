@@ -23,6 +23,7 @@
 #include "config.h"
 #include "warnpush.h"
 #  include <QtGui/QApplication>
+#  include <QtGui/QMessageBox>
 #include "warnpop.h"
 #include <stdexcept>
 #include <iostream>
@@ -32,15 +33,26 @@
 int main(int argc, char* argv[])
 {
     QApplication app(argc, argv);
+
+    // have to create a window so that if there's an error and we're
+    // trying to show the error message box we have  parent window
+    // where to place the message. otherwise the user has no context
+    // where the message popped up. (i think it makes more sense this way)
+    pime::MainWindow window;
     try
     {
-        pime::MainWindow window;
         window.show();
+        window.loadData();        
         return app.exec();
     }
     catch (const std::exception& e) 
     {
-        std::cerr << "Exception occurred: " << e.what();
+        QMessageBox msg(&window);
+        msg.setIcon(QMessageBox::Critical);
+        msg.setText(QString::fromUtf8(e.what()));
+        msg.setWindowTitle(window.windowTitle());
+        msg.setStandardButtons(QMessageBox::Ok);
+        msg.exec();
     }
     return 0;
 

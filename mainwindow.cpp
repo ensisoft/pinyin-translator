@@ -152,45 +152,6 @@ MainWindow::MainWindow() : model_(new DicModel(dic_))
     ui_.tableView->setModel(model_.get());
     ui_.statusbar->insertPermanentWidget(0, ui_.frmInfo);
 
-    const auto& home = QDir::homePath();
-    const auto& pime = home + "/.pime/";
-    const auto& local = pime + "local.dic";
-
-    QDir dir(pime);
-    if (!dir.mkpath(pime))
-        throw std::runtime_error("failed to create ~/.pime");
-
-    quint32 metaid = 1;
-    meta data;
-    data.file   = local;
-    data.metaid = metaid;
-    meta_.insert(std::make_pair(metaid, data));
-    if (QFileInfo(local).exists())
-    {
-        dic_.load(local, metaid);
-        qDebug() << "Loaded local dictionary " << local;
-    }
-
-    ++metaid;
-    QStringList filter("*.dic");
-    QStringList dics = dir.entryList(filter);
-    for (const auto& file : dics)
-    {
-        if (file == "local.dic")
-            continue;
-
-        meta data;
-        data.file = pime + file;
-        data.metaid = metaid;
-        qDebug() << "Loading: " << pime + file;
-
-        dic_.load(pime + file, metaid);
-        meta_.insert(std::make_pair(metaid, data));
-        ++metaid;
-    }
-
-    NOTE(QString("Loaded dictionary with %1 words").arg(dic_.wordCount()));            
-
     QSettings settings("Ensisoft", "Pime");
     const auto wwidth  = settings.value("window/width", width()).toInt();
     const auto wheight = settings.value("window/height", height()).toInt();
@@ -208,14 +169,10 @@ MainWindow::MainWindow() : model_(new DicModel(dic_))
     ui_.actionTraditional->setChecked(traditional);
     ui_.actionSimplified->setChecked(!traditional);
     ui_.editInput->installEventFilter(this);    
-
     model_->toggleTraditional(traditional);
 
     move(xpos, ypos);
     resize(wwidth, wheight);
-
-    updateDictionary("");
-    updateWordCount();
 
     QStyle* style = QApplication::setStyle("Cleanlooks");
     if (style)
@@ -233,19 +190,105 @@ MainWindow::~MainWindow()
     settings.setValue("window/ypos", y());
     settings.setValue("window/traditional", ui_.actionTraditional->isChecked());
     settings.setValue("window/font", font_.toString());
+}
 
-    for (const auto& meta : meta_)
+void MainWindow::loadData()
+{
+    const auto& homedir = QDir::homePath();
+    const auto& pimedir = homedir + "/.pime/";
+    const auto& local   = pimedir + "local.dic";
+
+    QDir dir(pimedir);
+    if (!dir.mkpath(pimedir))
+        throw std::runtime_error("failed to create ~/.pime");
+
+    std::size_t wordCount = 0;
+
+    // load local dictionary (if any). this is where new words are stored by default.
+    meta data;
+    data.file   = local;
+    data.metaid = 1;
+    meta_.insert(std::make_pair(1, data));
+    if (QFileInfo(local).exists())
     {
-        const auto& file = meta.second.file;
-        const auto& metaid = meta.second.metaid;
-        dic_.save(file, metaid);
-
-        qDebug() << "Saving words to " << file;
+        dic_.load(local, 1);
+        wordCount = dic_.wordCount();
+        qDebug() << "Loaded local dictionary " << local << " with " << wordCount << " words";
     }
+
+    // load our "global" dictionary. this is the one that comes with the application.
+    const auto& instdir = QApplication::applicationDirPath();
+    const auto& datadir = instdir + "/data/";
+    const auto& global  = datadir + "cedict.dic";
+    data.file   = global;
+    data.metaid = 2;
+    dic_.load(global, 2);
+    meta_.insert(std::make_pair(2, data));
+
+    qDebug() << "Loaded global dictionary " << global << " with " 
+             << dic_.wordCount() - wordCount << " words";
+
+    wordCount = dic_.wordCount();
+
+    // load any other .dic files in user home
+    quint32 metaid = 3;
+    QStringList filter("*.dic");
+    QStringList dics = dir.entryList(filter);
+    for (const auto& file : dics)
+    {
+        if (file == "local.dic")
+            continue;
+
+        meta data;
+        data.file = pimedir + file;
+        data.metaid = metaid;
+        qDebug() << "Loading: " << pimedir + file;
+
+        dic_.load(pimedir + file, metaid);
+        meta_.insert(std::make_pair(metaid, data));
+        ++metaid;
+    }
+
+    NOTE(QString("Loaded dictionary with %1 words").arg(dic_.wordCount()));            
+
+    updateDictionary("");
+    updateWordCount();    
+}
+
+bool MainWindow::saveData()
+{
+    try
+    {
+        for (const auto& meta : meta_)
+        {
+            const auto& file = meta.second.file;
+            const auto& metaid = meta.second.metaid;
+            qDebug() << "Saving words to " << file;            
+            dic_.save(file, metaid);
+        }
+    }
+    catch (const std::exception& e)
+    {
+        const auto what = QString::fromUtf8(e.what());
+
+        QMessageBox msg(this);
+        msg.setIcon(QMessageBox::Critical);
+        msg.setText(QString(
+            "There was a problem saving dictionary data:\n%1\n"
+            "Are you sure you want to exit?").arg(what));
+        msg.setWindowTitle(windowTitle());
+        msg.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+        if (msg.exec() == QMessageBox::No)
+            return false;
+    }
+    return true;
 }
 
 void MainWindow::on_actionExit_triggered()
 {
+    qDebug() << "actionExit";
+
+    // this will generage QCloseEvent which will handle saving data    
     close();
 }
 
@@ -411,6 +454,13 @@ bool MainWindow::eventFilter(QObject* receiver, QEvent* event)
     return true;
 }
 
+void MainWindow::closeEvent(QCloseEvent* close)
+{
+    qDebug() << "closeEvent";
+    if (saveData())
+        close->accept();
+}
+
 void MainWindow::translate(int index, const QString& key)
 {
     if (index >= model_->size())
@@ -481,11 +531,8 @@ void MainWindow::updateWordCount()
 
 void MainWindow::setFont(QFont font)
 {
-    //ui_.editInput->setFont(font);
-    //ui_.editPinyin->setFont(font);
     ui_.editChinese->setFont(font);
     model_->setChFont(font);
-    //ui_.tableView->setFont(font);
 
     qDebug() << "Font set to: " << font.rawName() << " " << font.pixelSize() << " px";
 

@@ -45,6 +45,9 @@ namespace pime
         MainWindow();
        ~MainWindow();
 
+        void loadData();
+        bool saveData();
+
     private slots:
         void on_actionExit_triggered();
         void on_actionNewWord_triggered();
@@ -58,6 +61,7 @@ namespace pime
         void on_tableView_doubleClicked(const QModelIndex& index);
     private:
         bool eventFilter(QObject* reciver, QEvent* event) override;
+        void closeEvent(QCloseEvent* event);
         void translate(int index, const QString& key);
         void updateDictionary(const QString& key);
         void updateTranslation();

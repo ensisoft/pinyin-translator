@@ -32,4 +32,4 @@ exe pime :
    /qt//QtGui
 ;
 
-install ./dist : pime ;
+install . : pime ;
