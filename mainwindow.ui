@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>Pinyin Translator</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="resource.qrc">
+    <normaloff>:/icons/ico_dragon.png</normaloff>:/icons/ico_dragon.png</iconset>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
@@ -92,6 +96,45 @@
       </layout>
      </widget>
     </item>
+    <item>
+     <widget class="QFrame" name="frmInfo">
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Sunken</enum>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_3">
+       <property name="margin">
+        <number>0</number>
+       </property>
+       <item row="0" column="0">
+        <layout class="QHBoxLayout" name="horizontalLayout_3">
+         <item>
+          <widget class="QLabel" name="lblInfoIcon">
+           <property name="text">
+            <string/>
+           </property>
+           <property name="pixmap">
+            <pixmap resource="resource.qrc">:/icons/ico_dictionary.png</pixmap>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="lblInfoText">
+           <property name="toolTip">
+            <string>Free space available at default download location</string>
+           </property>
+           <property name="text">
+            <string>INFO</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+    </item>
    </layout>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -116,6 +159,8 @@
    <addaction name="separator"/>
    <addaction name="actionDictionary"/>
    <addaction name="separator"/>
+   <addaction name="actionTraditional"/>
+   <addaction name="actionSimplified"/>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -130,14 +175,15 @@
     <property name="title">
      <string>File</string>
     </property>
-    <addaction name="actionExit"/>
-    <addaction name="separator"/>
     <addaction name="actionNewText"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
     <property name="title">
      <string>About</string>
     </property>
+    <addaction name="actionAbout"/>
    </widget>
    <widget class="QMenu" name="menuDictionary">
     <property name="title">
@@ -206,6 +252,10 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/icons/ico_traditional.png</normaloff>:/icons/ico_traditional.png</iconset>
+   </property>
    <property name="text">
     <string>Traditional</string>
    </property>
@@ -214,8 +264,21 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/icons/ico_simplified.png</normaloff>:/icons/ico_simplified.png</iconset>
+   </property>
    <property name="text">
     <string>Simplified</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/icons/ico_about.png</normaloff>:/icons/ico_about.png</iconset>
+   </property>
+   <property name="text">
+    <string>About</string>
    </property>
   </action>
  </widget>

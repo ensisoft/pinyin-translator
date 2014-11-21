@@ -48,13 +48,18 @@ namespace pime
         void on_actionExit_triggered();
         void on_actionNewWord_triggered();
         void on_actionNewText_triggered();
+        void on_actionTraditional_triggered();
+        void on_actionSimplified_triggered();
         void on_actionDictionary_triggered();
+        void on_actionAbout_triggered();
         void on_editInput_textEdited(const QString& text);
+        void on_tableView_doubleClicked(const QModelIndex& index);
     private:
         bool eventFilter(QObject* reciver, QEvent* event) override;
         void translate(int index, const QString& key);
         void updateDictionary(const QString& key);
         void updateTranslation();
+        void updateWordCount();
 
     private:
         class DicModel;

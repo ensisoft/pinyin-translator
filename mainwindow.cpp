@@ -26,6 +26,7 @@
 #  include <QtGui/QKeyEvent>
 #  include <QtGui/QClipboard>
 #  include <QtGui/QStyleFactory>
+#  include <QtGui/QMessageBox>
 #  include <QtDebug>
 #  include <QDir>
 #  include <QFileInfo>
@@ -47,7 +48,7 @@ namespace pime
 class MainWindow::DicModel : public QAbstractTableModel
 {
 public:
-    DicModel(dictionary& dic) : dic_(dic)
+    DicModel(dictionary& dic) : dic_(dic), traditional_(true)
     {}
 
     virtual QVariant data(const QModelIndex& index, int role) const override
@@ -63,11 +64,13 @@ public:
                     if (row < 12)
                         return "F" + QString::number(row + 1);
                     else return "";
+                case 1:
+                    if (traditional_)
+                        return word.traditional;
+                    else return word.simplified;
 
-                case 1: return word.traditional;
-                case 2: return word.simplified;
-                case 3: return word.pinyin;
-                case 4: return word.description;
+                case 2: return word.pinyin;
+                case 3: return word.description;
             }            
         }
         return QVariant();        
@@ -81,10 +84,9 @@ public:
             switch (section)
             {
                 case 0: return "Shortcut";
-                case 1: return "Traditional";
-                case 2: return "Simplified";
-                case 3: return "Pinyin";
-                case 4: return "Definition";
+                case 1: return "Chinese";
+                case 2: return "Pinyin";
+                case 3: return "Definition";
             }
         }
         return QVariant();
@@ -95,7 +97,7 @@ public:
     }
     virtual int columnCount(const QModelIndex&) const override
     {
-        return 5;
+        return 4;
     }
     std::size_t size() const 
     {
@@ -116,15 +118,25 @@ public:
         return words_[i];
     }
 
+    void toggleTraditional(bool on_off)
+    {
+        traditional_ = on_off;
+        auto first = QAbstractTableModel::index(0, 0);
+        auto last  = QAbstractTableModel::index(words_.size(), 4);
+        emit dataChanged(first, last);
+    }
+
 private:
     std::vector<dictionary::word> words_;
     dictionary& dic_;
+    bool traditional_;
 };
 
 MainWindow::MainWindow() : model_(new DicModel(dic_))
 {
     ui_.setupUi(this);
     ui_.tableView->setModel(model_.get());
+    ui_.statusbar->insertPermanentWidget(0, ui_.frmInfo);
 
     const auto& home = QDir::homePath();
     const auto& pime = home + "/.pime/";
@@ -170,13 +182,18 @@ MainWindow::MainWindow() : model_(new DicModel(dic_))
     const auto wheight = settings.value("window/height", height()).toInt();
     const auto xpos   = settings.value("window/xpos", x()).toInt();
     const auto ypos   = settings.value("window/ypos", y()).toInt();
+    const auto traditional = settings.value("window/traditional", true).toBool();
+    ui_.actionTraditional->setChecked(traditional);
+    ui_.actionSimplified->setChecked(!traditional);
+    ui_.editInput->installEventFilter(this);    
+
+    model_->toggleTraditional(traditional);
 
     move(xpos, ypos);
     resize(wwidth, wheight);
 
-    ui_.editInput->installEventFilter(this);
-
     updateDictionary("");
+    updateWordCount();
 
     QStyle* style = QApplication::setStyle("Cleanlooks");
     if (style)
@@ -192,6 +209,7 @@ MainWindow::~MainWindow()
     settings.setValue("window/height", height());
     settings.setValue("window/xpos", x());
     settings.setValue("window/ypos", y());
+    settings.setValue("window/traditional", ui_.actionTraditional->isChecked());
 
     for (const auto& meta : meta_)
     {
@@ -227,6 +245,8 @@ void MainWindow::on_actionNewWord_triggered()
     model_->update(key);
 
     NOTE(QString("Added %1").arg(word.traditional));
+
+    updateWordCount();
 }
 
 void MainWindow::on_actionNewText_triggered()
@@ -243,12 +263,66 @@ void MainWindow::on_actionDictionary_triggered()
 {
     DlgDictionary dlg(this, dic_);
     dlg.exec();
+
+    updateWordCount();
 }
 
+void MainWindow::on_actionTraditional_triggered()
+{
+    ui_.actionSimplified->setChecked(false);
+
+    model_->toggleTraditional(true);
+
+    updateTranslation();
+}
+
+void MainWindow::on_actionSimplified_triggered()
+{
+    ui_.actionTraditional->setChecked(false);
+
+    model_->toggleTraditional(false);
+
+    updateTranslation();
+}
+
+
+void MainWindow::on_actionAbout_triggered()
+{
+    QMessageBox msg(this);
+    msg.setWindowTitle(QString("Aout %1").arg(windowTitle()));
+    msg.setText(QString::fromUtf8(
+        "Pinyin-Translator v0.1\n\n"
+        "Copyright (c) 2014 Sami Väisänen\n"
+        "http://www.ensisoft.com/\n\n"
+        "CC-CEDICT\n"
+        "Community maintained free Chinese-English dictionary\n"
+        "Published by MDBG\n"
+        "Creative Commons Attribution-Share Alike 3.0\n"
+        "http://createtivecommons.org/licenses/by-sa/3.0/\n"
+        "CEDICT - Copyright (c) 1997, 1998 Paul Andrew Denisowski\n"));
+    msg.setStandardButtons(QMessageBox::Ok);
+    msg.setIcon(QMessageBox::Information);
+    msg.exec();
+}
 
 void MainWindow::on_editInput_textEdited(const QString& text)
 {
     updateDictionary(text);
+}
+
+void MainWindow::on_tableView_doubleClicked(const QModelIndex& index)
+{
+    const auto input = ui_.editInput->text();
+    if (input.isEmpty())
+        return;
+
+    const auto row   = index.row();
+
+    translate(row, input);
+    updateTranslation();
+    updateDictionary("");
+
+    ui_.editInput->clear();
 }
 
 bool MainWindow::eventFilter(QObject* receiver, QEvent* event)
@@ -348,16 +422,26 @@ void MainWindow::updateDictionary(const QString& key)
 
 void MainWindow::updateTranslation()
 {
+    bool simplified = ui_.actionSimplified->isChecked();
+
     QString chinese;
     QString pinyin;
     for (const auto& tok : line_)
     {
-        chinese += tok.traditional;
+        if (simplified)
+            chinese += tok.simplified;
+        else chinese += tok.traditional;
         pinyin  += QString("%1 ").arg(tok.pinyin);
     }
 
     ui_.editPinyin->setText(pinyin);
     ui_.editChinese->setText(chinese);
+}
+
+void MainWindow::updateWordCount()
+{
+    ui_.lblInfoText->setText(
+        QString("%1 words").arg(dic_.wordCount()));
 }
 
 } // pime

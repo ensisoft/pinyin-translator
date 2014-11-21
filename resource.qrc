@@ -7,5 +7,9 @@
     <file>icons/ico_word_edit.png</file>    
     <file>icons/ico_dictionary.png</file>
     <file>icons/ico_new_text.png</file>
+    <file>icons/ico_dragon.png</file>
+    <file>icons/ico_traditional.png</file>
+    <file>icons/ico_simplified.png</file>
+    <file>icons/ico_about.png</file>
   </qresource>
 </RCC>

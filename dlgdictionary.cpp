@@ -64,7 +64,7 @@ public:
             switch (section)
             {
                 case 0: return "Traditional";
-                case 1: return "Simplified:";
+                case 1: return "Simplified";
                 case 2: return "Pinyin";
                 case 3: return "Definition";
             }        
