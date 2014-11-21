@@ -43,10 +43,9 @@ public:
     {
         const auto row = index.row();
         const auto col = index.column();
-
         if (role == Qt::DisplayRole)
         {
-            const auto& word = words_[row];
+            const auto& word = *words_[row];
             switch (col)
             {
                 case 0: return word.traditional;
@@ -128,7 +127,7 @@ public:
         const auto word = words_[row];
         beginRemoveRows(QModelIndex(), row, row);
 
-        dic_.erase(word);
+        dic_.erase(*word);
         auto it = words_.begin();
         std::advance(it, row);
         words_.erase(it);
@@ -139,13 +138,13 @@ public:
     const dictionary::word& getWord(std::size_t i)
     {
         Q_ASSERT(i < words_.size());
-        return words_[i];
+        return *words_[i];
     }
 
 
 private:
     dictionary& dic_;
-    std::vector<dictionary::word> words_;
+    std::vector<const dictionary::word*> words_;
 private:
     QString search_;
 };
@@ -201,6 +200,7 @@ void DlgDictionary::on_btnAdd_clicked()
     word.description = dlg.desc();
     word.pinyin      = dlg.pinyin();
     word.meta        = 1;
+    word.erased      = false;
     
     model_->store(word);
 

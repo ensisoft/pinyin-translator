@@ -57,7 +57,7 @@ public:
         const auto col = index.column();
         if (role == Qt::DisplayRole)
         {
-            const auto& word = words_[row];
+            const auto& word = *words_[row];
             switch (col)
             {
                 case 0: 
@@ -115,7 +115,7 @@ public:
     }
     const dictionary::word& getWord(std::size_t i) const 
     {
-        return words_[i];
+        return *words_[i];
     }
 
     void toggleTraditional(bool on_off)
@@ -127,7 +127,7 @@ public:
     }
 
 private:
-    std::vector<dictionary::word> words_;
+    std::vector<const dictionary::word*> words_;
     dictionary& dic_;
     bool traditional_;
 };
@@ -241,6 +241,7 @@ void MainWindow::on_actionNewWord_triggered()
     word.pinyin      = dlg.pinyin();
     word.description = dlg.desc();
     word.meta        = 1;
+    word.erased      = false;
     dic_.store(word);
     model_->update(key);
 

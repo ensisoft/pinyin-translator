@@ -26,11 +26,11 @@
 #  include <QFile>
 #  include <QTextStream>
 #  include <QStringList>
+#  include "pinyin.h"
 #include "warnpop.h"
 #include <stdexcept>
 
 #include "dictionary.h"
-#include "pinyin.h"
 
 QString make_dictionary_key(const QString& pinyin)
 {
@@ -65,6 +65,7 @@ void dictionary::load(const QString& file, quint32 metakey)
         const auto& line = stream.readLine();
         const auto& toks = line.split("|");
         const auto& key  = make_dictionary_key(toks[2]);
+        const auto index = words_.size();        
 
         dictionary::word word;
         word.key         = key;
@@ -74,6 +75,7 @@ void dictionary::load(const QString& file, quint32 metakey)
         word.description = toks[3];
         word.guid        = wordguid_++;
         word.meta        = metakey;
+        word.erased      = false;
 
         // bool duplicate = false;
         // auto lower = words_.lower_bound(key);
@@ -87,7 +89,8 @@ void dictionary::load(const QString& file, quint32 metakey)
         //     }
         // }
         //if (!duplicate)
-        words_.insert(std::make_pair(key, word));
+        words_.push_back(word);
+        index_.insert(std::make_pair(key, index));
     }
 }
 
@@ -100,63 +103,60 @@ void dictionary::save(const QString& file, quint32 metakey)
     QTextStream stream(&io);
     stream.setCodec("UTF-8");
 
-    auto beg = words_.begin();
-    auto end = words_.end();
+    auto beg = index_.begin();
+    auto end = index_.end();
     for (; beg != end; ++beg)
     {
         const auto& key  = beg->first;
-        const auto& word = beg->second;
+        const auto& word = words_[beg->second];
         if (word.meta != metakey)
+            continue;
+        if (word.erased)
             continue;
         stream << word.traditional << "|" << word.simplified << "|" << word.pinyin << "|" << word.description;
         stream << "\n";
     }
 }
 
-std::vector<dictionary::word> dictionary::lookup(const QString& key) const
+std::vector<const dictionary::word*> dictionary::lookup(const QString& key) const
 {
-    std::vector<word> ret;
+    std::vector<const word*> ret;
 
-    // auto lower = words_.lower_bound(key);
-    // auto upper = words_.upper_bound(key);
-    // for (; lower != upper; ++lower)
-    //     ret.push_back(lower->second);
-
-    auto lower = words_.lower_bound(key);
-    auto upper = words_.end();
+    auto lower = index_.lower_bound(key);
+    auto upper = index_.end();
     for (; lower != upper; ++lower)
     {
         const auto& k = lower->first;
         if (!k.startsWith(key))
             break;
-        ret.push_back(lower->second);
+        ret.push_back(&words_[lower->second]);
     }
 
     return ret;
 }
 
-std::vector<dictionary::word> dictionary::search(const QString& str) const
+std::vector<const dictionary::word*> dictionary::search(const QString& str) const
 {
-    std::vector<word> ret;
+    std::vector<const word*> ret;
 
-    auto beg = words_.begin();
-    auto end = words_.end();
+    auto beg = index_.begin();
+    auto end = index_.end();
     for (; beg != end; ++beg)
     {
-        const auto& definition = beg->second.description;
+        const auto& definition = words_[beg->second].description;
         if (definition.indexOf(str) != -1)
-            ret.push_back(beg->second);
+            ret.push_back(&words_[beg->second]);
     }
 
     return ret;
 }
 
-std::vector<dictionary::word> dictionary::flatten() const
+std::vector<const dictionary::word*> dictionary::flatten() const
 {
-    std::vector<word> ret;
+    std::vector<const word*> ret;
 
-    for (auto pair : words_)
-        ret.push_back(pair.second);
+    for (const auto& pair : index_)
+        ret.push_back(&words_[pair.second]);
 
     return ret;
 }
@@ -166,27 +166,31 @@ bool dictionary::store(dictionary::word& word)
     Q_ASSERT(!word.traditional.isEmpty());
     Q_ASSERT(!word.simplified.isEmpty());
     Q_ASSERT(!word.pinyin.isEmpty());
-    
+
     word.key = make_dictionary_key(word.pinyin);
 
-    auto lower = words_.lower_bound(word.key);
-    auto upper = words_.upper_bound(word.key);
+    auto lower = index_.lower_bound(word.key);
+    auto upper = index_.upper_bound(word.key);
     for (; lower != upper; ++lower)
     {
-        const auto& w = lower->second;
+        auto& w = words_[lower->second];
         if (w.guid != word.guid)
             continue;
 
-        lower->second.traditional = word.traditional;
-        lower->second.simplified  = word.simplified;
-        lower->second.pinyin      = word.pinyin;
-        lower->second.description = word.description;
+        w.traditional = word.traditional;
+        w.simplified  = word.simplified;
+        w.pinyin      = word.pinyin;
+        w.description = word.description;
         qDebug() << "Updated word: " << word.key << "Pinyin: " << word.pinyin << "Ch: " << word.traditional;
         return true;
     }
 
+    const auto index = words_.size();
+
     word.guid = wordguid_++;
-    words_.insert(std::make_pair(word.key, word));
+    index_.insert(std::make_pair(word.key, index));
+    words_.push_back(word);
+
     qDebug() << "Stored new word: " << word.key << "Pinyin: " << word.pinyin << " Ch: " << word.traditional;
     return false;
 }
@@ -196,15 +200,16 @@ bool dictionary::erase(const dictionary::word& word)
     Q_ASSERT(!word.key.isEmpty());
     Q_ASSERT(word.guid);
 
-    auto lower = words_.lower_bound(word.key);
-    auto upper = words_.upper_bound(word.key);
+    auto lower = index_.lower_bound(word.key);
+    auto upper = index_.upper_bound(word.key);
     for (; lower != upper; ++lower)
     {
-        const auto& w = lower->second;
+        const auto& w = words_[lower->second];
         if (w.guid != word.guid)
             continue;
 
-        words_.erase(lower);
+        words_[lower->second].erased = true;
+        index_.erase(lower);
         return true;
     }
     return false;

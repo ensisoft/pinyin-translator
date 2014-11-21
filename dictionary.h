@@ -43,6 +43,7 @@ namespace pime
             QString description;
             quint32 meta;
             quint32 guid;
+            bool erased;
         };
 
         dictionary();
@@ -55,14 +56,14 @@ namespace pime
         void save(const QString& file, quint32 metakey);
 
         // lookup a list of words with the given key in the dictionary.
-        std::vector<word> lookup(const QString& key) const;
+        std::vector<const word*> lookup(const QString& key) const;
 
         // search the definitions of the word for the given substring
         // and return those that match.
-        std::vector<word> search(const QString& str) const;
+        std::vector<const word*> search(const QString& str) const;
 
         // flatten the whole dictionary into a list.
-        std::vector<word> flatten() const;
+        std::vector<const word*> flatten() const;
 
         // store a word in the dictionary.
         // if the word indentified by the given key and guid already exists
@@ -79,7 +80,8 @@ namespace pime
         quint32 wordguid_;
 
     private:
-        std::multimap<QString, word> words_;
+        std::multimap<QString, std::size_t> index_;
+        std::vector<word> words_;
 
     };
 } // pime

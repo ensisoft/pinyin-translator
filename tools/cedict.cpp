@@ -23,8 +23,9 @@
 #include "../config.h"
 #include "../warnpush.h"
 #  include <boost/spirit/include/classic.hpp>
+#  include "../pinyin.h"
 #include "../warnpop.h"
-#include "../pinyin.h"
+
 
 #include <string>
 #include <iostream>
