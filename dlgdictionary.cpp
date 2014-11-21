@@ -181,7 +181,18 @@ DlgDictionary::DlgDictionary(QFont font, QWidget* parent, dictionary& dic) : QDi
 
 
 DlgDictionary::~DlgDictionary()
-{}
+{
+    QSettings settings("Ensisoft", "Pime");
+    settings.setValue("dictionary-window/width", width());
+    settings.setValue("dictionary-window/height", height());
+    settings.setValue("dictionary-window/xpos", x());
+    settings.setValue("dictionary-window/ypos", y());
+}
+
+void DlgDictionary::focus()
+{
+    ui_.editSearch->setFocus();
+}
 
 void DlgDictionary::updateTable(const QString& search)
 {

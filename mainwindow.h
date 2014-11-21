@@ -37,6 +37,8 @@
 
 namespace pime
 {
+    class DlgDictionary;
+
     class MainWindow : public QMainWindow
     {
         Q_OBJECT
@@ -64,6 +66,7 @@ namespace pime
         void closeEvent(QCloseEvent* event);
         void translate(int index, const QString& key);
         void updateDictionary(const QString& key);
+        void updateDictionary(const QString& key, int tone);
         void updateTranslation();
         void updateWordCount();
         void setFont(QFont f);
@@ -83,6 +86,7 @@ namespace pime
 
         std::list<word> line_;
         std::unique_ptr<DicModel> model_;
+        std::unique_ptr<DlgDictionary> dlg_;
         std::map<quint32, meta> meta_;
         dictionary dic_;
 

@@ -119,6 +119,12 @@ public:
         words_ = dic_.lookup(key);
         reset();
     }
+    void update(const QString& key, int tone)
+    {
+        words_ = dic_.lookup(key, tone);
+        reset();
+    }
+
     const dictionary::word& getWord(std::size_t i) const 
     {
         return *words_[i];
@@ -328,8 +334,11 @@ void MainWindow::on_actionNewText_triggered()
 
 void MainWindow::on_actionDictionary_triggered()
 {
-    DlgDictionary dlg(font_, this, dic_);
-    dlg.exec();
+    if (!dlg_)
+        dlg_.reset(new DlgDictionary(font_, nullptr, dic_));
+
+    dlg_->show();
+    dlg_->focus();
 
     updateWordCount();
 }
@@ -384,6 +393,18 @@ void MainWindow::on_actionFont_triggered()
 
 void MainWindow::on_editInput_textEdited(const QString& text)
 {
+    if (!text.isEmpty())
+    {
+        const auto digit = text.right(1);
+        const auto tone  = digit.toInt();
+        if (tone >= 1 && tone <= 4)
+        {
+            auto key = text;
+            key.resize(text.size()-1);
+            updateDictionary(key, tone);
+            return;
+        }
+    }
     updateDictionary(text);
 }
 
@@ -487,22 +508,13 @@ void MainWindow::updateDictionary(const QString& key)
     qDebug() << "Dictionary key: " << key;
 
     model_->update(key);
+}
 
-//     ui_.listWords->clear();
-//
-//     words_ = dic_.lookup(key);
-//     for (size_t i=0; i<words_.size(); ++i)
-//     {
-//         const auto& word = words_[i];
-//
-//         QListWidgetItem* item = new QListWidgetItem();
-//         item->setText(QString("%1.\t%2\t%3\t%4")
-//             .arg(i + 1)
-//             .arg(word.chinese)
-//             .arg(word.pinyin)
-//             .arg(word.description));
-//         ui_.listWords->addItem(item);
-//     }
+void MainWindow::updateDictionary(const QString& key, int tone)
+{
+    qDebug() << "Dictionary key: " << key << " tone: " << tone;
+
+    model_->update(key, tone);
 }
 
 void MainWindow::updateTranslation()

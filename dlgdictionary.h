@@ -43,6 +43,8 @@ namespace pime
         DlgDictionary(QFont font, QWidget* parent, dictionary& dic);
        ~DlgDictionary();
 
+        void focus();
+
     private:
         void updateTable(const QString& search);
         void updateWordCount();

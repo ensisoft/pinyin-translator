@@ -23,6 +23,8 @@
 #pragma once
 
 #include <map>
+#include <cassert>
+#include <string>
 
 namespace pinyin
 {
@@ -304,5 +306,55 @@ bool is_vowel(wchar_t c)
     }
     return false;
 }
+
+
+static 
+std::wstring make_pinyin_syllable(std::wstring syllable, int tone)
+{
+    std::wstring ret;
+
+    int tonepos = -1;
+    for (auto it = syllable.begin(); it != syllable.end(); ++it)
+    {
+        const auto letter = *it;
+        const auto prev = ret.empty() ? 0 : ret.back();        
+        ret.push_back(letter);
+        if (tonepos != -1)
+            continue;
+
+        // figure out the tone mark
+        if (letter == a_latin || letter == A_latin)
+        {
+            // a takes the tone mark
+            tonepos = ret.size() - 1;
+        }
+        if (letter == e_latin || letter == E_latin)
+        {
+            // e takes the tone mark
+            tonepos = ret.size() - 1;
+        }
+        if (letter == u_latin || letter == U_latin)
+        {
+            // if there's "ou" then the o takes the tone mark
+            if (prev == o_latin || prev == O_latin)
+                tonepos = ret.size() - 2;
+        }
+    }
+    if (tonepos == -1)
+    {
+        // take the last vowel
+        for (tonepos = ret.size()-1; tonepos > 0; --tonepos)
+        {
+            if (pinyin::is_vowel(ret[tonepos]))
+                break;
+        }
+    }
+    assert(tonepos >= 0);
+    assert(tonepos < ret.size());
+    ret[tonepos] = pinyin::tonemap(ret[tonepos], tone);
+    return ret;
+}
+
+
 
 } // pinyin

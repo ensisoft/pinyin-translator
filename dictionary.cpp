@@ -44,6 +44,13 @@ QString make_dictionary_key(const QString& pinyin)
     return QString::fromStdWString(ret);
 }
 
+QString make_dictionary_syllable(const QString& key, int tone)
+{
+    std::wstring wide = key.toStdWString();
+    std::wstring syllable = pinyin::make_pinyin_syllable(wide, tone);
+    return QString::fromStdWString(syllable);
+}
+
 namespace pime
 {
 
@@ -133,6 +140,29 @@ std::vector<const dictionary::word*> dictionary::lookup(const QString& key) cons
         ret.push_back(&words_[lower->second]);
     }
 
+    return ret;
+}
+
+std::vector<const dictionary::word*> dictionary::lookup(const QString& key, int tone) const
+{
+    std::vector<const word*> ret;
+
+    QString syllable = make_dictionary_syllable(key, tone);
+
+    auto lower = index_.lower_bound(key);
+    auto upper = index_.upper_bound(key);
+    for (; lower != upper; ++lower)
+    {
+        const auto& k = lower->first;
+        if (!k.startsWith(key))
+            break;
+
+        const auto& w = words_[lower->second];
+        if (!w.pinyin.startsWith(syllable))
+            continue;
+
+        ret.push_back(&w);
+    }
     return ret;
 }
 
