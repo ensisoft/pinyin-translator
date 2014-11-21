@@ -44,6 +44,7 @@ namespace pime
 
     private:
         void updateTable(const QString& search);
+        void updateWordCount();
 
     private slots:
         void on_btnAdd_clicked();

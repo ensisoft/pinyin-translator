@@ -64,9 +64,10 @@ public:
                         return "F" + QString::number(row + 1);
                     else return "";
 
-                case 1: return word.chinese;
-                case 2: return word.pinyin;
-                case 3: return word.description;
+                case 1: return word.traditional;
+                case 2: return word.simplified;
+                case 3: return word.pinyin;
+                case 4: return word.description;
             }            
         }
         return QVariant();        
@@ -80,9 +81,10 @@ public:
             switch (section)
             {
                 case 0: return "Shortcut";
-                case 1: return "Chinese";
-                case 2: return "Pinyin";
-                case 3: return "Definition";
+                case 1: return "Traditional";
+                case 2: return "Simplified";
+                case 3: return "Pinyin";
+                case 4: return "Definition";
             }
         }
         return QVariant();
@@ -93,7 +95,7 @@ public:
     }
     virtual int columnCount(const QModelIndex&) const override
     {
-        return 4;
+        return 5;
     }
     std::size_t size() const 
     {
@@ -210,20 +212,21 @@ void MainWindow::on_actionNewWord_triggered()
 {
     const auto key = ui_.editInput->text();
 
-    DlgWord dlg(this, key);
+    DlgWord dlg(this);
     if (dlg.exec() == QDialog::Rejected)
         return;
 
     dictionary::word word;
-    word.key         = dlg.key();
-    word.chinese     = dlg.chinese();
+    //word.key         = dlg.key();
+    word.traditional = dlg.traditional();
+    word.simplified  = dlg.simplified();
     word.pinyin      = dlg.pinyin();
     word.description = dlg.desc();
     word.meta        = 1;
     dic_.store(word);
     model_->update(key);
 
-    NOTE(QString("Added %1").arg(word.chinese));
+    NOTE(QString("Added %1").arg(word.traditional));
 }
 
 void MainWindow::on_actionNewText_triggered()
@@ -304,16 +307,18 @@ void MainWindow::translate(int index, const QString& key)
     if (index >= model_->size())
     {
         word w;
-        w.pinyin  = key;
-        w.chinese = key;
+        w.pinyin      = key;
+        w.traditional = key;
+        w.simplified  = key;
         line_.push_back(w);
     }
     else
     {
         const auto& translate = model_->getWord(index);
         word w;
-        w.pinyin  = translate.pinyin;
-        w.chinese = translate.chinese;
+        w.pinyin      = translate.pinyin;
+        w.traditional = translate.traditional;
+        w.simplified  = translate.simplified;
         line_.push_back(w);
     }
 }
@@ -347,7 +352,7 @@ void MainWindow::updateTranslation()
     QString pinyin;
     for (const auto& tok : line_)
     {
-        chinese += tok.chinese;
+        chinese += tok.traditional;
         pinyin  += QString("%1 ").arg(tok.pinyin);
     }
 

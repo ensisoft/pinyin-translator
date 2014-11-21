@@ -37,7 +37,8 @@ namespace pime
     public:
         struct word {
             QString key;
-            QString chinese;
+            QString traditional;
+            QString simplified;
             QString pinyin;
             QString description;
             quint32 meta;

@@ -49,9 +49,10 @@ public:
             const auto& word = words_[row];
             switch (col)
             {
-                case 0: return word.chinese;
-                case 1: return word.pinyin;
-                case 2: return word.description;
+                case 0: return word.traditional;
+                case 1: return word.simplified;
+                case 2: return word.pinyin;
+                case 3: return word.description;
             }
         }
         return QVariant();
@@ -62,9 +63,10 @@ public:
         {
             switch (section)
             {
-                case 0: return "Chinese";
-                case 1: return "Pinyin";
-                case 2: return "Definition";
+                case 0: return "Traditional";
+                case 1: return "Simplified:";
+                case 2: return "Pinyin";
+                case 3: return "Definition";
             }        
         }
         return QVariant();        
@@ -75,7 +77,7 @@ public:
     }
     virtual int columnCount(const QModelIndex&) const override
     {
-        return 3;
+        return 4;
     }
 
     void filter(const QString& str)
@@ -173,28 +175,36 @@ DlgDictionary::~DlgDictionary()
 void DlgDictionary::updateTable(const QString& search)
 {
     model_->filter(search);
+
+    updateWordCount();
+}
+
+void DlgDictionary::updateWordCount()
+{
     const auto total = model_->wordCountTotal();
     const auto shown = model_->wordCountShown();
 
     ui_.lblCount->setText(QString("Total %1 words. Currently showing %2 words.")
         .arg(total)
-        .arg(shown));
+        .arg(shown));    
 }
 
 void DlgDictionary::on_btnAdd_clicked()
 {
-    DlgWord dlg(this, "");
+    DlgWord dlg(this);
     if (dlg.exec() == QDialog::Rejected)
         return;
 
     dictionary::word word;
-    word.key         = dlg.key();
-    word.chinese     = dlg.chinese();
+    word.traditional = dlg.traditional();
+    word.simplified  = dlg.simplified();
     word.description = dlg.desc();
     word.pinyin      = dlg.pinyin();
     word.meta        = 1;
     
     model_->store(word);
+
+    updateWordCount();
 }
 
 void DlgDictionary::on_btnDel_clicked()
@@ -204,6 +214,8 @@ void DlgDictionary::on_btnDel_clicked()
         return;
     
     model_->deleteWords(rows);
+
+    updateWordCount();
 }
 
 void DlgDictionary::on_btnEdit_clicked()
@@ -216,18 +228,21 @@ void DlgDictionary::on_btnEdit_clicked()
     {
         auto row = rows[i].row();
         auto word = model_->getWord(row);
-        DlgWord dlg(this, word.key, 
+        DlgWord dlg(this, 
             word.pinyin,
-            word.chinese,
+            word.traditional,
+            word.simplified,
             word.description);
         if (dlg.exec() == QDialog::Rejected)
             continue;
 
-        word.pinyin  = dlg.pinyin();
-        word.chinese = dlg.chinese();
+        word.pinyin      = dlg.pinyin();
+        word.simplified  = dlg.simplified();
+        word.traditional = dlg.traditional();
         word.description = dlg.desc();
         model_->store(word);
     }
+    updateWordCount();
 }
 
 void DlgDictionary::on_btnClose_clicked()

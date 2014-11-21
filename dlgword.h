@@ -36,38 +36,35 @@ namespace pime
         Q_OBJECT
 
     public:
-        DlgWord(QWidget* parent, const QString& key) : QDialog(parent)
+        DlgWord(QWidget* parent) : QDialog(parent)
         {
             ui_.setupUi(this);
-            ui_.editKey->setText(key);
-            if (!key.isEmpty())
-                ui_.editPinyin->setFocus();
+            ui_.editPinyin->setFocus();
         }
 
-        DlgWord(QWidget* parent, const QString& key, 
+        DlgWord(QWidget* parent,
             const QString& pinyin,
-            const QString& chinese,
+            const QString& traditional,
+            const QString& simplified,
             const QString& desc) : QDialog(parent)
         {
             ui_.setupUi(this);
-            ui_.editKey->setEnabled(false);            
-            ui_.editKey->setText(key);
             ui_.editPinyin->setText(pinyin);
-            ui_.editChinese->setText(chinese);
+            ui_.editTraditional->setText(traditional);            
+            ui_.editSimplified->setText(simplified);
             ui_.editDescription->setText(desc);
         }
 
        ~DlgWord()
         {}
 
-        QString key() const 
+        QString traditional() const 
         {
-            return ui_.editKey->text();
+            return ui_.editTraditional->text();
         }
-
-        QString chinese() const 
+        QString simplified() const 
         {
-            return ui_.editChinese->text();
+            return ui_.editSimplified->text();
         }
 
         QString pinyin() const 
@@ -83,24 +80,25 @@ namespace pime
     private slots:
         void on_btnAccept_clicked()
         {
-            const auto& key = ui_.editKey->text();
-            if (key.isEmpty())
-            {
-                ui_.editKey->setFocus();
-                return;
-            }
             const auto& pinyin = ui_.editPinyin->text();
             if (pinyin.isEmpty())
             {
                 ui_.editPinyin->setFocus();
                 return;
             }
-            const auto& chinese = ui_.editChinese->text();
-            if (chinese.isEmpty())
+            const auto& trad = ui_.editTraditional->text();
+            if (trad.isEmpty())
             {
-                ui_.editChinese->setFocus();
+                ui_.editTraditional->setFocus();
                 return;
             }
+            const auto& simp = ui_.editSimplified->text();
+            if (simp.isEmpty())
+            {
+                ui_.editSimplified->setFocus();
+                return;
+            }
+
             accept();
         }
 

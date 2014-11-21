@@ -128,10 +128,17 @@ std::string make_dictionary_pinyin(std::string pinyin)
                 {
                     if ((next_letter == pinyin::a_latin) || (next_letter == pinyin::A_latin))
                     {
+                        // a takes the tone mark
+                        tonepos = syllable.size() - 1;
+                    }
+                    if ((next_letter == pinyin::e_latin) || (next_letter == pinyin::E_latin))
+                    {
+                        // e takes the tone mark
                         tonepos = syllable.size() - 1;
                     }
                     if ((next_letter == pinyin::u_latin) || (next_letter == pinyin::U_latin))
                     {
+                        // if there's on ou then the o takes the tone mark
                         if ((prev_letter == pinyin::o_latin) || (prev_letter == pinyin::O_latin))
                             tonepos = syllable.size() - 2;
                     }
@@ -145,22 +152,41 @@ std::string make_dictionary_pinyin(std::string pinyin)
     return utf8::encode(ret);
 }
 
+std::string make_dictionary_definition(std::string s)
+{
+    assert(s.back() == '/');
+    s.pop_back();
+
+    std::string ret;
+    for (const auto& c : s)
+    {
+        if (c == '/')
+        {
+            ret.append(" / ");
+        }
+        else ret.push_back(c);
+    }
+    return ret;
+}
+
 void process_word(word w, std::ostream& out)
 {
-    const auto& key = make_dictionary_key(w.pinyin);
-    const auto& pin = make_dictionary_pinyin(w.pinyin);
+    const auto& key  = make_dictionary_key(w.pinyin);
+    const auto& pin  = make_dictionary_pinyin(w.pinyin);
+    const auto& def  = make_dictionary_definition(w.definition);
     const auto& trad = w.traditional;
-    const auto& def  = w.definition;
+    const auto& simp = w.simplified;
 
-    out << key << "|" << trad << "|" << pin << "|" << def;
+    out << trad << "|" << simp << "|" << pin << "|" << def;
     out << "\n";
 }
 
 int main(int argc, char* argv[])
 {
-    // std::cout << make_dictionary_pinyin("chao3");
-    // std::cout << make_dictionary_pinyin("chao2");    
-    // return 0;
+    //std::cout << make_dictionary_pinyin("chao3") << "\n";
+    //std::cout << make_dictionary_pinyin("chao2") << "\n";   
+    //std::cout << make_dictionary_pinyin("mei3 guo2") << "\n";
+    //return 0;
 
     if (argc < 3)
     {

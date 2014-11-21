@@ -30,6 +30,18 @@
 #include <stdexcept>
 
 #include "dictionary.h"
+#include "pinyin.h"
+
+QString make_dictionary_key(const QString& pinyin)
+{
+    std::wstring wide = pinyin.toStdWString();
+    std::wstring ret;
+    for (const auto& c : wide)
+    {
+        ret.push_back(pinyin::toneunmap(c));
+    }
+    return QString::fromStdWString(ret);
+}
 
 namespace pime
 {
@@ -52,11 +64,12 @@ void dictionary::load(const QString& file, quint32 metakey)
     {
         const auto& line = stream.readLine();
         const auto& toks = line.split("|");
-        const auto& key  = toks[0];
+        const auto& key  = make_dictionary_key(toks[2]);
 
         dictionary::word word;
         word.key         = key;
-        word.chinese     = toks[1];
+        word.traditional = toks[0];
+        word.simplified  = toks[1];
         word.pinyin      = toks[2];
         word.description = toks[3];
         word.guid        = wordguid_++;
@@ -95,7 +108,8 @@ void dictionary::save(const QString& file, quint32 metakey)
         const auto& word = beg->second;
         if (word.meta != metakey)
             continue;
-        stream << key << "|" << word.chinese << "|" << word.pinyin << "|" << word.description << "\n";
+        stream << word.traditional << "|" << word.simplified << "|" << word.pinyin << "|" << word.description;
+        stream << "\n";
     }
 }
 
@@ -149,9 +163,11 @@ std::vector<dictionary::word> dictionary::flatten() const
 
 bool dictionary::store(dictionary::word& word)
 {
-    Q_ASSERT(!word.key.isEmpty());
-    Q_ASSERT(!word.chinese.isEmpty());
+    Q_ASSERT(!word.traditional.isEmpty());
+    Q_ASSERT(!word.simplified.isEmpty());
     Q_ASSERT(!word.pinyin.isEmpty());
+    
+    word.key = make_dictionary_key(word.pinyin);
 
     auto lower = words_.lower_bound(word.key);
     auto upper = words_.upper_bound(word.key);
@@ -161,16 +177,17 @@ bool dictionary::store(dictionary::word& word)
         if (w.guid != word.guid)
             continue;
 
-        lower->second.chinese = word.chinese;
-        lower->second.pinyin  = word.pinyin;
+        lower->second.traditional = word.traditional;
+        lower->second.simplified  = word.simplified;
+        lower->second.pinyin      = word.pinyin;
         lower->second.description = word.description;
-        qDebug() << "Updated word: " << word.key << "Pinyin: " << word.pinyin << "Ch: " << word.chinese;
+        qDebug() << "Updated word: " << word.key << "Pinyin: " << word.pinyin << "Ch: " << word.traditional;
         return true;
     }
 
     word.guid = wordguid_++;
     words_.insert(std::make_pair(word.key, word));
-    qDebug() << "Stored new word: " << word.key << "Pinyin: " << word.pinyin << " Ch: " << word.chinese;
+    qDebug() << "Stored new word: " << word.key << "Pinyin: " << word.pinyin << " Ch: " << word.traditional;
     return false;
 }
 

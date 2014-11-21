@@ -61,7 +61,8 @@ namespace pime
 
         struct word {
             QString pinyin;
-            QString chinese;
+            QString traditional;
+            QString simplified;
         };
         struct meta {
             QString file;

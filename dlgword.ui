@@ -23,12 +23,12 @@
       <item>
        <layout class="QGridLayout" name="gridLayout">
         <item row="2" column="1">
-         <widget class="QLineEdit" name="editChinese"/>
+         <widget class="QLineEdit" name="editSimplified"/>
         </item>
         <item row="0" column="0">
          <widget class="QLabel" name="label_4">
           <property name="text">
-           <string>Key</string>
+           <string>Pinyin</string>
           </property>
          </widget>
         </item>
@@ -36,31 +36,35 @@
          <widget class="QLineEdit" name="editDescription"/>
         </item>
         <item row="0" column="1">
-         <widget class="QLineEdit" name="editKey"/>
+         <widget class="QLineEdit" name="editPinyin">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+         </widget>
         </item>
         <item row="1" column="0">
          <widget class="QLabel" name="label">
           <property name="text">
-           <string>Pinyin</string>
+           <string>Traditional</string>
           </property>
          </widget>
         </item>
         <item row="3" column="0">
          <widget class="QLabel" name="label_3">
           <property name="text">
-           <string>Description</string>
+           <string>Definition</string>
           </property>
          </widget>
         </item>
         <item row="2" column="0">
          <widget class="QLabel" name="label_2">
           <property name="text">
-           <string>Chinese</string>
+           <string>Simplified</string>
           </property>
          </widget>
         </item>
         <item row="1" column="1">
-         <widget class="QLineEdit" name="editPinyin"/>
+         <widget class="QLineEdit" name="editTraditional"/>
         </item>
        </layout>
       </item>
@@ -101,9 +105,9 @@
   </layout>
  </widget>
  <tabstops>
-  <tabstop>editKey</tabstop>
   <tabstop>editPinyin</tabstop>
-  <tabstop>editChinese</tabstop>
+  <tabstop>editTraditional</tabstop>
+  <tabstop>editSimplified</tabstop>
   <tabstop>editDescription</tabstop>
   <tabstop>btnAccept</tabstop>
   <tabstop>btnCancel</tabstop>
