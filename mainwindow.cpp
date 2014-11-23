@@ -37,6 +37,7 @@
 #include <algorithm>
 
 #include "mainwindow.h"
+#include "pinyin.h"
 #include "dlgword.h"
 #include "dlgdictionary.h"
 
@@ -119,12 +120,6 @@ public:
         words_ = dic_.lookup(key);
         reset();
     }
-    void update(const QString& key, int tone)
-    {
-        words_ = dic_.lookup(key, tone);
-        reset();
-    }
-
     const dictionary::word& getWord(std::size_t i) const 
     {
         return *words_[i];
@@ -337,7 +332,9 @@ void MainWindow::on_actionDictionary_triggered()
     if (!dlg_)
         dlg_.reset(new DlgDictionary(font_, nullptr, dic_));
 
-    dlg_->show();
+    dlg_->showNormal();
+    dlg_->raise();
+    dlg_->activateWindow();
     dlg_->focus();
 
     updateWordCount();
@@ -397,19 +394,24 @@ void MainWindow::on_actionFind_triggered()
 
 void MainWindow::on_editInput_textEdited(const QString& text)
 {
-    if (!text.isEmpty())
+    auto tone = 0;
+    auto key = text;
+    auto len = text.size();
+
+    if (!key.isEmpty())
     {
-        const auto digit = text.right(1);
-        const auto tone  = digit.toInt();
-        if (tone >= 1 && tone <= 4)
+        if (key.right(2) == "u:")
         {
-            auto key = text;
-            key.resize(text.size()-1);
-            updateDictionary(key, tone);
-            return;
+            key.resize(len-2);
+            key.push_back(pinyin::u_diaresis_latin);
+        }
+        else if (key.right(2) == "U:")
+        {
+            key.resize(len-2);
+            key.push_back(pinyin::U_diaresis_latin);
         }
     }
-    updateDictionary(text);
+    updateDictionary(key);
 }
 
 void MainWindow::on_tableView_doubleClicked(const QModelIndex& index)
@@ -518,13 +520,6 @@ void MainWindow::updateDictionary(const QString& key)
     qDebug() << "Dictionary key: " << key;
 
     model_->update(key);
-}
-
-void MainWindow::updateDictionary(const QString& key, int tone)
-{
-    qDebug() << "Dictionary key: " << key << " tone: " << tone;
-
-    model_->update(key, tone);
 }
 
 void MainWindow::updateTranslation()

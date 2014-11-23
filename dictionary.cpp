@@ -143,29 +143,6 @@ std::vector<const dictionary::word*> dictionary::lookup(const QString& key) cons
     return ret;
 }
 
-std::vector<const dictionary::word*> dictionary::lookup(const QString& key, int tone) const
-{
-    std::vector<const word*> ret;
-
-    QString syllable = make_dictionary_syllable(key, tone);
-
-    auto lower = index_.lower_bound(key);
-    auto upper = index_.upper_bound(key);
-    for (; lower != upper; ++lower)
-    {
-        const auto& k = lower->first;
-        if (!k.startsWith(key))
-            break;
-
-        const auto& w = words_[lower->second];
-        if (!w.pinyin.startsWith(syllable))
-            continue;
-
-        ret.push_back(&w);
-    }
-    return ret;
-}
-
 std::vector<const dictionary::word*> dictionary::search(const QString& str) const
 {
     std::vector<const word*> ret;

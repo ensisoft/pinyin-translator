@@ -67,7 +67,6 @@ namespace pime
         void closeEvent(QCloseEvent* event);
         void translate(int index, const QString& key);
         void updateDictionary(const QString& key);
-        void updateDictionary(const QString& key, int tone);
         void updateTranslation();
         void updateWordCount();
         void setFont(QFont f);

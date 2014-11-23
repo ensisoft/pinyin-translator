@@ -58,8 +58,6 @@ namespace pime
         // lookup a list of words with the given key in the dictionary.
         std::vector<const word*> lookup(const QString& key) const;
 
-        std::vector<const word*> lookup(const QString& key, int tone) const;
-
         // search the definitions of the word for the given substring
         // and return those that match.
         std::vector<const word*> search(const QString& str) const;

@@ -210,7 +210,7 @@ wchar_t toneunmap(wchar_t vowel)
         {i_macron, i_latin},
         {o_macron, o_latin},
         {u_macron, u_latin},
-        {u_diaresis_macron, u_latin},
+        {u_diaresis_macron, u_diaresis_latin},
 
         // second tone.
         {a_acute, a_latin},
@@ -218,7 +218,7 @@ wchar_t toneunmap(wchar_t vowel)
         {i_acute, i_latin},
         {o_acute, o_latin},
         {u_acute, u_latin},
-        {u_diaresis_acute, u_latin},
+        {u_diaresis_acute, u_diaresis_latin},
 
         // third tone
         {a_charon, a_latin},
@@ -226,7 +226,7 @@ wchar_t toneunmap(wchar_t vowel)
         {i_charon, i_latin},
         {o_charon, o_latin},
         {u_charon, u_latin},
-        {u_diaresis_charon, u_latin},
+        {u_diaresis_charon, u_diaresis_latin},
 
         // fourth tone
         {a_grave, a_latin},
@@ -234,7 +234,7 @@ wchar_t toneunmap(wchar_t vowel)
         {i_grave, i_latin},
         {o_grave, o_latin},
         {u_grave, u_latin},
-        {u_diaresis_grave, u_latin}
+        {u_diaresis_grave, u_diaresis_latin}
     };
 
     const auto lower = lower_case.find(vowel);
@@ -248,7 +248,7 @@ wchar_t toneunmap(wchar_t vowel)
         {I_macron, I_latin},
         {O_macron, O_latin},
         {U_macron, U_latin},
-        {U_diaresis_macron, U_latin},
+        {U_diaresis_macron, U_diaresis_latin},
 
         // second tone.
         {A_acute, A_latin},
@@ -256,7 +256,7 @@ wchar_t toneunmap(wchar_t vowel)
         {I_acute, I_latin},
         {O_acute, O_latin},
         {U_acute, U_latin},
-        {U_diaresis_acute, U_latin},
+        {U_diaresis_acute, U_diaresis_latin},
 
         // third tone
         {A_charon, A_latin},
@@ -264,7 +264,7 @@ wchar_t toneunmap(wchar_t vowel)
         {I_charon, I_latin},
         {O_charon, O_latin},
         {U_charon, U_latin},
-        {U_diaresis_charon, U_latin},
+        {U_diaresis_charon, U_diaresis_latin},
 
         // fourth tone
         {A_grave, A_latin},
@@ -272,7 +272,7 @@ wchar_t toneunmap(wchar_t vowel)
         {I_grave, I_latin},
         {O_grave, O_latin},
         {U_grave, U_latin},
-        {U_diaresis_grave, U_latin}
+        {U_diaresis_grave, U_diaresis_latin}
     };    
     const auto upper = upper_case.find(vowel);
     if (upper != std::end(upper_case))
