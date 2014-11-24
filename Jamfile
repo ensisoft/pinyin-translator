@@ -33,4 +33,6 @@ exe pime :
    /qt//QtGui
 ;
 
-install . : pime ;
+install dist : pime translator.sh ;
+install dist/data : data/cedict.dic data/frequency.txt ;
+

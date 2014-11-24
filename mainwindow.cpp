@@ -416,7 +416,6 @@ void MainWindow::on_actionFind_triggered()
 
 void MainWindow::on_editInput_textEdited(const QString& text)
 {
-    auto tone = 0;
     auto key = text;
     auto len = text.size();
 
@@ -459,12 +458,27 @@ bool MainWindow::eventFilter(QObject* receiver, QEvent* event)
     if (event->type() != QEvent::KeyPress)
         return QMainWindow::eventFilter(receiver, event);        
 
-    const auto* keypress = static_cast<const QKeyEvent*>(event);
-    const auto input = ui_.editInput->text();
+    const auto* press = static_cast<const QKeyEvent*>(event);
+    const auto& input = ui_.editInput->text();
+    if (press->key() == Qt::Key_Backspace)
+    {
+        if (input.isEmpty())
+        {
+            if (!line_.empty())
+            {
+                const auto key = line_.back().key;
+                line_.pop_back();
+                updateTranslation();
+                updateDictionary(key);
+                ui_.editInput->setText(key);
+            }
+            return true;
+        }
+        return QMainWindow::eventFilter(receiver, event);
+    }
 
     int wordindex = 0;
-    bool copy_to_clip = false;
-    switch (keypress->key())
+    switch (press->key())
     {
         case Qt::Key_F1: wordindex = 1; break;
         case Qt::Key_F2: wordindex = 2; break;
@@ -479,7 +493,6 @@ bool MainWindow::eventFilter(QObject* receiver, QEvent* event)
         case Qt::Key_F11: wordindex = 11; break;
         case Qt::Key_F12: wordindex = 12; break;
         case Qt::Key_Space: wordindex = 1; break;
-        case Qt::Key_Enter: wordindex = 1; copy_to_clip = true; break;
     }
 
     if (!wordindex)
@@ -493,13 +506,6 @@ bool MainWindow::eventFilter(QObject* receiver, QEvent* event)
     updateDictionary("");
 
     ui_.editInput->clear();
-
-    if (copy_to_clip)
-    {
-        QString chinese = ui_.editChinese->text();
-        QClipboard* clip = QApplication::clipboard();
-        clip->setText(chinese);
-    }
     return true;
 }
 
@@ -521,6 +527,7 @@ void MainWindow::translate(int index, const QString& key)
     if (index >= model_->size())
     {
         word w;
+        w.key         = key;
         w.pinyin      = key;
         w.traditional = key;
         w.simplified  = key;
@@ -530,6 +537,7 @@ void MainWindow::translate(int index, const QString& key)
     {
         const auto& translate = model_->getWord(index);
         word w;
+        w.key         = key;
         w.pinyin      = translate.pinyin;
         w.traditional = translate.traditional;
         w.simplified  = translate.simplified;

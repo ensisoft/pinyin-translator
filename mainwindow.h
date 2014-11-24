@@ -76,6 +76,7 @@ namespace pime
         class DicModel;
 
         struct word {
+            QString key;
             QString pinyin;
             QString traditional;
             QString simplified;
