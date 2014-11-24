@@ -152,9 +152,13 @@ std::vector<const dictionary::word*> dictionary::search(const QString& str) cons
     auto end = index_.end();
     for (; beg != end; ++beg)
     {
-        const auto& definition = words_[beg->second].description;
-        if (definition.indexOf(str) != -1)
-            ret.push_back(&words_[beg->second]);
+        const auto& word = words_[beg->second];
+        if (word.description.indexOf(str) != -1)
+            ret.push_back(&word);
+        else if (word.traditional.indexOf(str) != -1)
+            ret.push_back(&word);
+        else if (word.simplified.indexOf(str) != -1)
+            ret.push_back(&word);
     }
 
     return ret;

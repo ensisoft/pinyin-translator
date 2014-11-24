@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>607</width>
-    <height>541</height>
+    <width>706</width>
+    <height>527</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -163,14 +163,16 @@
    <addaction name="actionSimplified"/>
    <addaction name="separator"/>
    <addaction name="actionFont"/>
+   <addaction name="separator"/>
+   <addaction name="actionInvaders"/>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>607</width>
-     <height>23</height>
+     <width>706</width>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -195,14 +197,7 @@
     <addaction name="separator"/>
     <addaction name="actionDictionary"/>
    </widget>
-   <widget class="QMenu" name="menuEdit">
-    <property name="title">
-     <string>Edit</string>
-    </property>
-    <addaction name="actionFind"/>
-   </widget>
    <addaction name="menuFile"/>
-   <addaction name="menuEdit"/>
    <addaction name="menuDictionary"/>
    <addaction name="menuAbout"/>
   </widget>
@@ -321,6 +316,15 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+F</string>
+   </property>
+  </action>
+  <action name="actionInvaders">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/icons/ico_invaders.png</normaloff>:/icons/ico_invaders.png</iconset>
+   </property>
+   <property name="text">
+    <string>Invaders</string>
    </property>
   </action>
  </widget>

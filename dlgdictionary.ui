@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>Dictionary</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="resource.qrc">
+    <normaloff>:/icons/ico_dictionary.png</normaloff>:/icons/ico_dictionary.png</iconset>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
     <widget class="QGroupBox" name="groupBox">

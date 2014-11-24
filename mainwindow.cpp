@@ -414,6 +414,10 @@ void MainWindow::on_actionFind_triggered()
 {
 }
 
+void MainWindow::on_actionInvaders_triggered()
+{
+}
+
 void MainWindow::on_editInput_textEdited(const QString& text)
 {
     auto key = text;

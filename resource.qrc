@@ -13,5 +13,6 @@
     <file>icons/ico_about.png</file>
     <file>icons/ico_font.png</file>
     <file>icons/ico_find.png</file>
+    <file>icons/ico_invaders.png</file>
   </qresource>
 </RCC>

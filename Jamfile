@@ -33,6 +33,8 @@ exe pime :
    /qt//QtGui
 ;
 
+#build-project invaders ;
+
 install dist : pime translator.sh ;
 install dist/data : data/cedict.dic data/frequency.txt ;
 

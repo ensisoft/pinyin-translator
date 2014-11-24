@@ -87,7 +87,7 @@ public:
     void filter(const QString& str)
     {
         if (str.isEmpty())
-            words_ = dic_.flatten();
+             words_ = dic_.flatten();
         else words_ = dic_.search(str);
 
         reset();
