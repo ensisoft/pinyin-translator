@@ -84,6 +84,7 @@ void dictionary::load(const QString& file, quint32 metakey)
         word.guid        = wordguid_++;
         word.meta        = metakey;
         word.erased      = false;
+        word.frequency   = 0;
 
         // bool duplicate = false;
         // auto lower = words_.lower_bound(key);

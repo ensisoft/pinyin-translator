@@ -44,6 +44,7 @@ namespace pime
             quint32 meta;
             quint32 guid;
             bool erased;
+            mutable quint32 frequency;
         };
 
         dictionary();

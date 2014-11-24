@@ -50,7 +50,7 @@ namespace pime
 class MainWindow::DicModel : public QAbstractTableModel
 {
 public:
-    DicModel(dictionary& dic) : dic_(dic), traditional_(true)
+    DicModel(dictionary& dic, freqtable& freq) : dic_(dic), freq_(freq), traditional_(true)
     {}
 
     virtual QVariant data(const QModelIndex& index, int role) const override
@@ -118,6 +118,22 @@ public:
     void update(const QString& key)
     {
         words_ = dic_.lookup(key);
+        auto it = std::begin(words_);
+        for (; it != std::end(words_); ++it)
+        {
+            auto* w = *it;
+            if (w->key != key)
+                break;
+
+            w->frequency = freq_.lookup(w->simplified);
+        }
+
+        std::sort(std::begin(words_), it, 
+            [](const dictionary::word* lhs, const dictionary::word* rhs)
+            {
+                return rhs->frequency < lhs->frequency;
+            });
+
         reset();
     }
     const dictionary::word& getWord(std::size_t i) const 
@@ -143,11 +159,12 @@ public:
 private:
     std::vector<const dictionary::word*> words_;
     dictionary& dic_;
+    freqtable& freq_;
     bool traditional_;
     QFont chfont_;
 };
 
-MainWindow::MainWindow() : model_(new DicModel(dic_))
+MainWindow::MainWindow() : model_(new DicModel(dic_, freq_))
 {
     ui_.setupUi(this);
     ui_.tableView->setModel(model_.get());
@@ -221,6 +238,7 @@ void MainWindow::loadData()
     const auto& instdir = QApplication::applicationDirPath();
     const auto& datadir = instdir + "/data/";
     const auto& global  = datadir + "cedict.dic";
+    const auto& freq    = datadir + "frequency.txt";
     data.file   = global;
     data.metaid = 2;
     dic_.load(global, 2);
@@ -228,8 +246,11 @@ void MainWindow::loadData()
 
     qDebug() << "Loaded global dictionary " << global << " with " 
              << dic_.wordCount() - wordCount << " words";
-
     wordCount = dic_.wordCount();
+
+    freq_.load(freq);
+    qDebug() << "Loaded word frequency data " << freq << " with "
+             << freq_.freqCount() << " words";
 
     // load any other .dic files in user home
     quint32 metaid = 3;
@@ -309,6 +330,7 @@ void MainWindow::on_actionNewWord_triggered()
     word.description = dlg.desc();
     word.meta        = 1;
     word.erased      = false;
+    word.frequency   = 0;
     dic_.store(word);
     model_->update(key);
 

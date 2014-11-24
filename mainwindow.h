@@ -34,6 +34,7 @@
 #include <memory>
 #include <map>
 #include "dictionary.h"
+#include "freqtable.h"
 
 namespace pime
 {
@@ -89,6 +90,7 @@ namespace pime
         std::unique_ptr<DlgDictionary> dlg_;
         std::map<quint32, meta> meta_;
         dictionary dic_;
+        freqtable freq_;
 
     private:
         Ui::MainWindow ui_;

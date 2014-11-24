@@ -22,6 +22,7 @@ exe pime :
    mainwindow.cpp
    mainwindow.ui
    dictionary.cpp
+   freqtable.cpp
    resource.qrc
    dlgword.ui
    dlgword.h

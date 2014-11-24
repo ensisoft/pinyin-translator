@@ -226,6 +226,7 @@ void DlgDictionary::on_btnAdd_clicked()
     word.pinyin      = dlg.pinyin();
     word.meta        = 1;
     word.erased      = false;
+    word.frequency   = 0;
     
     model_->store(word);
 
