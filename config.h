@@ -24,6 +24,7 @@
 
 #if defined(__GNUG__)
 #  define __GCC__
+#  define LINUX_OS
 #endif
 
 #if defined(__clang__)
@@ -41,5 +42,6 @@
     // the macro is enabled in 'pime.sublime-project'    
     typedef int max_align_t;
 #  endif
+#  define LINUX_OS
 #endif
 
