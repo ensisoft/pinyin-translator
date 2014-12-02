@@ -22,6 +22,29 @@
 
 #pragma once
 
+// assuming msvc for windows, gcc and clang for linux
+
+#if defined(_MSC_VER)
+#  define __MSVC__
+#  define WINDOWS_OS
+
+   // execlude some stuff from the windows headers we dont need
+#  define WIN32_LEAN_AND_MEAN
+   
+   // get rid of the stupid MIN MAX macros..
+#  define NOMINMAX
+
+   // suppress some useless warnings
+#  define _CRT_SECURE_NO_WARNINGS
+#  define _SCL_SECURE_NO_WARNINGS
+
+   // we're building in unicode
+#  define UNICODE
+   
+   // msvc wants this for M_PI
+#  define _USE_MATH_DEFINES
+#endif
+
 #if defined(__GNUG__)
 #  define __GCC__
 #  define LINUX_OS
