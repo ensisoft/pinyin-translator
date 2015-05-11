@@ -7,6 +7,12 @@ Want to write Chinese but really can't wrap your head around the chinese charact
 Pinyin-translator builds a local database of words and provides a quick tool to mechanically
 convert pinyin into traditional chinese as you type. 
 
+![Screenshot](https://raw.githubusercontent.com/ensisoft/pinyin-translator/master/screens/screenshot.png "Main application window")
+
+The application incorporates a dictionary of over 110k words and a frequency table of over 9k entries.
+
+![Screenshot](https://raw.githubusercontent.com/ensisoft/pinyin-translator/master/screens/dictionary.png "Dictionary window")
+
 Building
 ----------------
 
