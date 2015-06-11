@@ -164,7 +164,6 @@
    <addaction name="separator"/>
    <addaction name="actionFont"/>
    <addaction name="separator"/>
-   <addaction name="actionInvaders"/>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -172,7 +171,7 @@
      <x>0</x>
      <y>0</y>
      <width>706</width>
-     <height>22</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -316,15 +315,6 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+F</string>
-   </property>
-  </action>
-  <action name="actionInvaders">
-   <property name="icon">
-    <iconset resource="resource.qrc">
-     <normaloff>:/icons/ico_invaders.png</normaloff>:/icons/ico_invaders.png</iconset>
-   </property>
-   <property name="text">
-    <string>Invaders</string>
    </property>
   </action>
  </widget>
