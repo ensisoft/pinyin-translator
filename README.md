@@ -18,7 +18,7 @@ Running on Windows
 
 1. unzip translator.zip
 2. install the vcredist_x86.exe package to install runtime libraries.
-3. run dist/
+3. run dist/pinyin-translator.exe
 
 
 Running on Linux
