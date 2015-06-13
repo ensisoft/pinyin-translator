@@ -68,3 +68,9 @@
 #  define LINUX_OS
 #endif
 
+namespace pime {
+
+const int VERSION_MAJOR = 1;
+const int VERSION_MINOR = 0;
+
+} // namespace

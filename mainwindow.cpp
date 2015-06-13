@@ -170,7 +170,7 @@ MainWindow::MainWindow() : model_(new DicModel(dic_, freq_))
     ui_.tableView->setModel(model_.get());
     ui_.statusbar->insertPermanentWidget(0, ui_.frmInfo);
 
-    QSettings settings("Ensisoft", "Pime");
+    QSettings settings("Ensisoft", "Pinyin-Translator");
     const auto wwidth  = settings.value("window/width", width()).toInt();
     const auto wheight = settings.value("window/height", height()).toInt();
     const auto xpos   = settings.value("window/xpos", x()).toInt();
@@ -201,7 +201,7 @@ MainWindow::MainWindow() : model_(new DicModel(dic_, freq_))
 
 MainWindow::~MainWindow()
 {
-    QSettings settings("Ensisoft", "Pime");
+    QSettings settings("Ensisoft", "Pinyin-Translator");
     settings.setValue("window/width", width());
     settings.setValue("window/height", height());
     settings.setValue("window/xpos", x());
@@ -213,12 +213,12 @@ MainWindow::~MainWindow()
 void MainWindow::loadData()
 {
     const auto& homedir = QDir::homePath();
-    const auto& pimedir = homedir + "/.pime/";
+    const auto& pimedir = homedir + "/.pinyin-translator/";
     const auto& local   = pimedir + "local.dic";
 
     QDir dir(pimedir);
     if (!dir.mkpath(pimedir))
-        throw std::runtime_error("failed to create ~/.pime");
+        throw std::runtime_error("failed to create ~/.pinyin-translator");
 
     std::size_t wordCount = 0;
 
@@ -386,7 +386,7 @@ void MainWindow::on_actionAbout_triggered()
     QMessageBox msg(this);
     msg.setWindowTitle(QString("Aout %1").arg(windowTitle()));
     msg.setText(QString::fromUtf8(
-        "Pinyin-Translator v0.1\n\n"
+        "Pinyin-Translator v %1.%2\n\n"
         "Copyright (c) 2014 Sami Väisänen\n"
         "http://www.ensisoft.com/\n\n"
         "CC-CEDICT\n"
@@ -394,7 +394,8 @@ void MainWindow::on_actionAbout_triggered()
         "Published by MDBG\n"
         "Creative Commons Attribution-Share Alike 3.0\n"
         "http://createtivecommons.org/licenses/by-sa/3.0/\n"
-        "CEDICT - Copyright (c) 1997, 1998 Paul Andrew Denisowski\n"));
+        "CEDICT - Copyright (c) 1997, 1998 Paul Andrew Denisowski\n")
+          .arg(VERSION_MAJOR).arg(VERSION_MINOR));
     msg.setStandardButtons(QMessageBox::Ok);
     msg.setIcon(QMessageBox::Information);
     msg.exec();
@@ -414,9 +415,6 @@ void MainWindow::on_actionFind_triggered()
 {
 }
 
-void MainWindow::on_actionInvaders_triggered()
-{
-}
 
 void MainWindow::on_editInput_textEdited(const QString& text)
 {

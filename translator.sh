@@ -11,11 +11,11 @@ ulimit -c unlimited
 
 if [ "$0" == "./translator.sh" ]; then
     export LD_LIBRARY_PATH=`pwd`
-    exec "./pime" "$@"
+    exec "./pinyin-translator" "$@"
 else
     cwd=`pwd`
     path=`echo $0 | sed s/translator.sh//`
     cd "$path"
     export LD_LIBRARY_PATH=`pwd`
-    exec "./pime" "$@"
+    exec "./pinyin-translator" "$@"
 fi

@@ -13,8 +13,22 @@ The application incorporates a dictionary of over 110k words and a frequency tab
 
 ![Screenshot](https://raw.githubusercontent.com/ensisoft/pinyin-translator/master/screens/dictionary.png "Dictionary window")
 
-Building
-----------------
+Running on Windows
+------------------
+
+1. unzip translator.zip
+2. install the vcredist_x86.exe package to install runtime libraries.
+3. run dist/
+
+
+Running on Linux
+-----------------
+
+1. Extract the translator.tar.gz
+2. run dist/translator.sh
+
+Building from source for LInux
+------------------------------
 
 1. Install and prepare boost.build
 
@@ -39,13 +53,14 @@ $ make
 $ make install
 ```
 
-3. build pinyin-translator
+3. Build pinyin-translator
+
 ```
 $ bjam 
 ```
 
+Building from source for Windows
+---------------------------------
 
-4. run the application
-```
-$ dist/translator.sh
-```
+todo:
+

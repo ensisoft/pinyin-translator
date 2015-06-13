@@ -23,7 +23,7 @@ project pime :
    <toolset>clang:<clfags>-std=c++11
 ;
 
-exe pime :
+exe pinyin-translator :
    main.cpp
    mainwindow.h
    mainwindow.cpp
@@ -46,7 +46,7 @@ exe pime :
 
 #build-project invaders ;
 
-install dist_d : pime translator.sh :
+install dist_d : pinyin-translator translator.sh :
    <variant>release:<location>dist
 ;
 
