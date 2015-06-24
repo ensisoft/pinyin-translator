@@ -167,7 +167,7 @@ DlgDictionary::DlgDictionary(QFont font, QWidget* parent, dictionary& dic) : QDi
     ui_.tableView->setModel(model_.get());
     model_->setChFont(font);
 
-    QSettings settings("Ensisoft", "Pime");
+    QSettings settings("Ensisoft", "Pinyin-Translator");
     const auto wwidth = settings.value("dictionary-window/width", width()).toInt();
     const auto wheight = settings.value("dictionary-window/height", height()).toInt();
     const auto xpos = settings.value("dictionary-window/xpos", x()).toInt();
@@ -182,7 +182,7 @@ DlgDictionary::DlgDictionary(QFont font, QWidget* parent, dictionary& dic) : QDi
 
 DlgDictionary::~DlgDictionary()
 {
-    QSettings settings("Ensisoft", "Pime");
+    QSettings settings("Ensisoft", "Pinyin-Translator");
     settings.setValue("dictionary-window/width", width());
     settings.setValue("dictionary-window/height", height());
     settings.setValue("dictionary-window/xpos", x());
@@ -275,7 +275,7 @@ void DlgDictionary::on_btnEdit_clicked()
 
 void DlgDictionary::on_btnClose_clicked()
 {
-    QSettings settings("Ensisoft", "Pime");
+    QSettings settings("Ensisoft", "Pinyin-Translator");
     settings.setValue("dictionary-window/width", width());
     settings.setValue("dictionary-window/height", height());
     settings.setValue("dictionary-window/xpos", x());
